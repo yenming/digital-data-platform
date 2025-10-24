@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # Node.js 應用程式
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=orionstar_tw
+      - DB_USER=root
+      - DB_PASSWORD=orionstar_password
+      - JWT_SECRET=your_super_secret_jwt_key_here
+      - SESSION_SECRET=your_session_secret_here
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+    networks:
+      - orionstar-network
+
+  # MySQL 資料庫
+  mysql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=orionstar_password
+      - MYSQL_DATABASE=orionstar_tw
+      - MYSQL_USER=orionstar_user
+      - MYSQL_PASSWORD=orionstar_user_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./config/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    restart: unless-stopped
+    networks:
+      - orionstar-network
+
+  # phpMyAdmin (可選，用於資料庫管理)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=orionstar_password
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    networks:
+      - orionstar-network
+
+volumes:
+  mysql_data:
+
+networks:
+  orionstar-network:
+    driver: bridge

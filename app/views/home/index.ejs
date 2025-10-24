@@ -1,0 +1,220 @@
+<%- include('../layouts/main', { 
+    title: '首頁',
+    page: 'home',
+    body: `
+<div class="container-fluid px-0">
+    <!-- Hero Section - OrionStar 風格 -->
+    <section class="hero-section text-white py-5">
+        <div class="container">
+            <div class="row align-items-center min-vh-50">
+                <div class="col-lg-6">
+                    <h1 class="display-3 fw-bold mb-4">
+                        獵戶星空
+                    </h1>
+                    <h2 class="h3 mb-4 text-light">
+                        為真有用的機器人而生
+                    </h2>
+                    <p class="lead mb-4 text-light">
+                        讓人們從重複性任務中解脫出來，去追求更具創造性和更重要的工作。
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="/products" class="btn btn-primary btn-lg">
+                            <i class="fas fa-robot me-2"></i>產品中心
+                        </a>
+                        <a href="/contact" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-envelope me-2"></i>聯繫我們
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="hero-image">
+                        <i class="fas fa-robot display-1 text-light opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 數據統計 - OrionStar 風格 -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="stat-item">
+                        <h3 class="display-4 fw-bold text-primary mb-2">60,000+</h3>
+                        <p class="text-muted">全球出貨量</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="stat-item">
+                        <h3 class="display-4 fw-bold text-primary mb-2">550 萬</h3>
+                        <p class="text-muted">總服務次數</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="stat-item">
+                        <h3 class="display-4 fw-bold text-primary mb-2">60+</h3>
+                        <p class="text-muted">全球國家和地區</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="stat-item">
+                        <h3 class="display-4 fw-bold text-primary mb-2">24/7</h3>
+                        <p class="text-muted">專業技術支援</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 最新消息 -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="text-center mb-5">
+                        <i class="fas fa-newspaper me-2"></i>
+                        最新消息
+                    </h2>
+                </div>
+            </div>
+            
+            <div class="text-center py-5">
+                <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">暫無文章</h4>
+                <p class="text-muted">目前沒有發布任何文章，請稍後再來查看。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 產品特點 - OrionStar 風格 -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="text-center mb-5">
+                        產品特點
+                    </h2>
+                    <p class="text-center text-muted mb-5">
+                        我們提供助力服務效率翻倍和減少運營成本所需的所有功能。
+                    </p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-shipping-fast fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="mb-3">高效遞送服務</h5>
+                        <p class="text-muted">LuckiBot能夠將菜品直接遞送到桌，也可以優先自動送到最近的餐桌，一次服務，多次配送。</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-recycle fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="mb-3">餐具回收模式</h5>
+                        <p class="text-muted">回收餐具對LuckiBot而言也是小菜一碟。每層大號托盤可承受 10 公斤的重量，整機總承重量為 40 公斤，足以一次性回收 5 個餐桌的餐具。</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="mb-3">動態避障</h5>
+                        <p class="text-muted">行業領先的多感測器融合解決方案為LuckiBot保駕護航，釐米級精準定位，3D 動態避障，滿足不同應用場景運營需求。</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-user-tie fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="mb-3">智慧接待</h5>
+                        <p class="text-muted">LuckiBot可帶領顧客前往相應餐桌，通過語音控制提供豐富服務。</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-users fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="mb-3">機器人協同合作</h5>
+                        <p class="text-muted">支援不同模式下的多台機器人在同一場景中同時工作，智慧協同合作，工作效率翻一倍。</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-birthday-cake fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="mb-3">主題服務</h5>
+                        <p class="text-muted">LuckiBot 支援豐富的專屬主題服務，包括生日、節假日、婚禮等，為顧客帶來更驚喜、更有人情味、更個性化的服務。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 客戶案例 - OrionStar 風格 -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="text-center mb-5">
+                        為什麼獵戶星空機器人是您的最佳選擇？
+                    </h2>
+                    <p class="text-center text-muted mb-5">
+                        一同瞭解OrionStar合作夥伴的使用體驗。
+                    </p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="testimonial-card p-4">
+                        <div class="testimonial-content mb-3">
+                            <p class="text-muted">"OrionStar的產品品質非常高，初期部署速度快，故障率低，售後服務也令人相當滿意。"</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <strong>STARRY ROBOTICS INC</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="testimonial-card p-4">
+                        <div class="testimonial-content mb-3">
+                            <p class="text-muted">"在對比多個品牌之後，最終選擇了OrionStar。只需一台LuckiBot機器人便能同時滿足遞送和行銷用途。"</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <strong>Hotel Technology Management (htm) Ltd</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="testimonial-card p-4">
+                        <div class="testimonial-content mb-3">
+                            <p class="text-muted">"能夠與OrionStar合作，我真的非常開心。我所使用的機器人的原型就是OrionStar的產品。與同類機器人相比，LuckiBot確實更勝一籌。"</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <strong>PHILON Service Robotics AG</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+`
+}) %>

@@ -1,0 +1,188 @@
+<%- include('../layouts/main', { 
+    title: '註冊',
+    page: 'auth',
+    body: `
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-plus me-2"></i>
+                        註冊新帳號
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form action="/auth/register" method="POST">
+                        <div class="row">
+                            <!-- 使用者名稱 -->
+                            <div class="col-md-6 mb-3">
+                                <label for="username" class="form-label">
+                                    <i class="fas fa-user me-1"></i>
+                                    使用者名稱 *
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control <%= typeof errors !== 'undefined' && errors.some(e => e.path === 'username') ? 'is-invalid' : '' %>" 
+                                    id="username" 
+                                    name="username" 
+                                    value="<%= typeof oldInput !== 'undefined' && oldInput.username ? oldInput.username : '' %>"
+                                    required
+                                >
+                                <% if (typeof errors !== 'undefined') { %>
+                                    <% const usernameError = errors.find(e => e.path === 'username'); %>
+                                    <% if (usernameError) { %>
+                                        <div class="invalid-feedback">
+                                            <%= usernameError.msg %>
+                                        </div>
+                                    <% } %>
+                                <% } %>
+                            </div>
+                            
+                            <!-- 電子郵件 -->
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">
+                                    <i class="fas fa-envelope me-1"></i>
+                                    電子郵件 *
+                                </label>
+                                <input 
+                                    type="email" 
+                                    class="form-control <%= typeof errors !== 'undefined' && errors.some(e => e.path === 'email') ? 'is-invalid' : '' %>" 
+                                    id="email" 
+                                    name="email" 
+                                    value="<%= typeof oldInput !== 'undefined' && oldInput.email ? oldInput.email : '' %>"
+                                    required
+                                >
+                                <% if (typeof errors !== 'undefined') { %>
+                                    <% const emailError = errors.find(e => e.path === 'email'); %>
+                                    <% if (emailError) { %>
+                                        <div class="invalid-feedback">
+                                            <%= emailError.msg %>
+                                        </div>
+                                    <% } %>
+                                <% } %>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <!-- 名字 -->
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label">
+                                    <i class="fas fa-id-card me-1"></i>
+                                    名字
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control <%= typeof errors !== 'undefined' && errors.some(e => e.path === 'firstName') ? 'is-invalid' : '' %>" 
+                                    id="firstName" 
+                                    name="firstName" 
+                                    value="<%= typeof oldInput !== 'undefined' && oldInput.firstName ? oldInput.firstName : '' %>"
+                                >
+                                <% if (typeof errors !== 'undefined') { %>
+                                    <% const firstNameError = errors.find(e => e.path === 'firstName'); %>
+                                    <% if (firstNameError) { %>
+                                        <div class="invalid-feedback">
+                                            <%= firstNameError.msg %>
+                                        </div>
+                                    <% } %>
+                                <% } %>
+                            </div>
+                            
+                            <!-- 姓氏 -->
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label">
+                                    <i class="fas fa-id-card me-1"></i>
+                                    姓氏
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control <%= typeof errors !== 'undefined' && errors.some(e => e.path === 'lastName') ? 'is-invalid' : '' %>" 
+                                    id="lastName" 
+                                    name="lastName" 
+                                    value="<%= typeof oldInput !== 'undefined' && oldInput.lastName ? oldInput.lastName : '' %>"
+                                >
+                                <% if (typeof errors !== 'undefined') { %>
+                                    <% const lastNameError = errors.find(e => e.path === 'lastName'); %>
+                                    <% if (lastNameError) { %>
+                                        <div class="invalid-feedback">
+                                            <%= lastNameError.msg %>
+                                        </div>
+                                    <% } %>
+                                <% } %>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <!-- 密碼 -->
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label">
+                                    <i class="fas fa-lock me-1"></i>
+                                    密碼 *
+                                </label>
+                                <input 
+                                    type="password" 
+                                    class="form-control <%= typeof errors !== 'undefined' && errors.some(e => e.path === 'password') ? 'is-invalid' : '' %>" 
+                                    id="password" 
+                                    name="password" 
+                                    required
+                                >
+                                <% if (typeof errors !== 'undefined') { %>
+                                    <% const passwordError = errors.find(e => e.path === 'password'); %>
+                                    <% if (passwordError) { %>
+                                        <div class="invalid-feedback">
+                                            <%= passwordError.msg %>
+                                        </div>
+                                    <% } %>
+                                <% } %>
+                                <div class="form-text">
+                                    密碼必須包含至少一個小寫字母、一個大寫字母和一個數字
+                                </div>
+                            </div>
+                            
+                            <!-- 確認密碼 -->
+                            <div class="col-md-6 mb-3">
+                                <label for="confirmPassword" class="form-label">
+                                    <i class="fas fa-lock me-1"></i>
+                                    確認密碼 *
+                                </label>
+                                <input 
+                                    type="password" 
+                                    class="form-control <%= typeof errors !== 'undefined' && errors.some(e => e.path === 'confirmPassword') ? 'is-invalid' : '' %>" 
+                                    id="confirmPassword" 
+                                    name="confirmPassword" 
+                                    required
+                                >
+                                <% if (typeof errors !== 'undefined') { %>
+                                    <% const confirmPasswordError = errors.find(e => e.path === 'confirmPassword'); %>
+                                    <% if (confirmPasswordError) { %>
+                                        <div class="invalid-feedback">
+                                            <%= confirmPasswordError.msg %>
+                                        </div>
+                                    <% } %>
+                                <% } %>
+                            </div>
+                        </div>
+                        
+                        <!-- 提交按鈕 -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-user-plus me-2"></i>
+                                註冊
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <p class="mb-0">
+                        已經有帳號了？
+                        <a href="/auth/login" class="text-decoration-none">
+                            立即登入
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+`
+}) %>

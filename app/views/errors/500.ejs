@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - 伺服器錯誤</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 text-center">
+                <div class="error-page">
+                    <i class="fas fa-server fa-5x text-danger mb-4"></i>
+                    <h1 class="display-1 fw-bold text-danger">500</h1>
+                    <h2 class="mb-4">伺服器錯誤</h2>
+                    <p class="lead text-muted mb-4">
+                        <%= typeof message !== 'undefined' ? message : '伺服器發生錯誤，請稍後再試。' %>
+                    </p>
+                    <% if (typeof error !== 'undefined' && error && process.env.NODE_ENV === 'development') { %>
+                        <div class="alert alert-danger text-start">
+                            <h6>錯誤詳情：</h6>
+                            <pre class="mb-0"><%= error.stack %></pre>
+                        </div>
+                    <% } %>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="/" class="btn btn-primary btn-lg">
+                            <i class="fas fa-home me-2"></i>
+                            返回首頁
+                        </a>
+                        <button onclick="location.reload()" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-redo me-2"></i>
+                            重新載入
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

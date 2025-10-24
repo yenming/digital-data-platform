@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# 允許搜索引擎索引所有頁面
+Allow: /products
+Allow: /about
+Allow: /contact
+
+# 禁止索引管理後台
+Disallow: /admin
+Disallow: /users
+Disallow: /auth
+
+# 禁止索引API端點
+Disallow: /api/
+
+# 禁止索引測試頁面
+Disallow: /test
+
+# 網站地圖位置
+Sitemap: https://orionstar.com.tw/sitemap.xml
+
+# 爬取延遲（可選）
+Crawl-delay: 1

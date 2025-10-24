@@ -1,0 +1,53 @@
+{
+  "name": "orionstar-com-tw-website",
+  "version": "1.0.0",
+  "description": "OrionStar Taiwan Website with Node.js, Express, Bootstrap 5, and MySQL",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "jest",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "bootstrap",
+    "mysql",
+    "sequelize",
+    "jwt",
+    "docker"
+  ],
+  "author": "OrionStar Taiwan",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ejs": "^3.1.9",
+    "mysql2": "^3.6.5",
+    "sequelize": "^6.35.2",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "express-validator": "^7.0.1",
+    "dotenv": "^16.3.1",
+    "morgan": "^1.10.0",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "express-session": "^1.17.3",
+    "connect-flash": "^0.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}

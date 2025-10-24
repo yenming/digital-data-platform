@@ -1,0 +1,99 @@
+<%- include('../layouts/main', { 
+    title: '登入',
+    page: 'auth',
+    body: `
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        登入帳號
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form action="/auth/login" method="POST">
+                        <!-- 電子郵件 -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope me-1"></i>
+                                電子郵件
+                            </label>
+                            <input 
+                                type="email" 
+                                class="form-control <%= typeof errors !== 'undefined' && errors.some(e => e.path === 'email') ? 'is-invalid' : '' %>" 
+                                id="email" 
+                                name="email" 
+                                value="<%= typeof oldInput !== 'undefined' && oldInput.email ? oldInput.email : '' %>"
+                                required
+                            >
+                            <% if (typeof errors !== 'undefined') { %>
+                                <% const emailError = errors.find(e => e.path === 'email'); %>
+                                <% if (emailError) { %>
+                                    <div class="invalid-feedback">
+                                        <%= emailError.msg %>
+                                    </div>
+                                <% } %>
+                            <% } %>
+                        </div>
+                        
+                        <!-- 密碼 -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-1"></i>
+                                密碼
+                            </label>
+                            <input 
+                                type="password" 
+                                class="form-control <%= typeof errors !== 'undefined' && errors.some(e => e.path === 'password') ? 'is-invalid' : '' %>" 
+                                id="password" 
+                                name="password" 
+                                required
+                            >
+                            <% if (typeof errors !== 'undefined') { %>
+                                <% const passwordError = errors.find(e => e.path === 'password'); %>
+                                <% if (passwordError) { %>
+                                    <div class="invalid-feedback">
+                                        <%= passwordError.msg %>
+                                    </div>
+                                <% } %>
+                            <% } %>
+                        </div>
+                        
+                        <!-- 記住我 -->
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                            <label class="form-check-label" for="remember">
+                                記住我
+                            </label>
+                        </div>
+                        
+                        <!-- 提交按鈕 -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>
+                                登入
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <p class="mb-2">
+                        還沒有帳號？
+                        <a href="/auth/register" class="text-decoration-none">
+                            立即註冊
+                        </a>
+                    </p>
+                    <p class="mb-0">
+                        <a href="/auth/forgot-password" class="text-decoration-none">
+                            忘記密碼？
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+`
+}) %>
