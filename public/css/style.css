@@ -1,4 +1,4 @@
-/* 自定義樣式 - 參考 Everise Digital 設計 */
+/* 自定義樣式 - Elixir 專業風格 */
 
 /* 全域樣式 */
 :root {
@@ -7,11 +7,14 @@
     --primary-light: #3b82f6;
     --secondary-color: #64748b;
     --accent-color: #0ea5e9;
+    --accent-green: #10b981;
     --success-color: #10b981;
     --warning-color: #f59e0b;
     --danger-color: #ef4444;
     --light-bg: #f8fafc;
-    --dark-bg: #1e293b;
+    --dark-bg: #ffffff;
+    --dark-secondary: #f1f5f9;
+    --dark-tertiary: #e2e8f0;
     --text-primary: #1e293b;
     --text-secondary: #64748b;
     --text-muted: #94a3b8;
@@ -20,44 +23,75 @@
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.15);
     --border-radius: 0.5rem;
     --border-radius-lg: 0.75rem;
     --border-radius-xl: 1rem;
+    --section-padding: 5rem 0;
+    --container-max-width: 1200px;
 }
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
     color: var(--text-primary);
-    background-color: #ffffff;
+    background-color: var(--dark-bg);
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
 }
 
-/* 導航欄樣式 - Everise Digital 風格 */
+/* 確保下拉選單不被遮住 */
+.container-fluid {
+    overflow: visible;
+}
+
+/* 容器樣式 */
+.container {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 1rem;
+    overflow: visible;
+}
+
+/* 區塊間距 */
+.section-padding {
+    padding: var(--section-padding);
+}
+
+/* 導航欄樣式 - Elixir 專業風格 */
 .navbar {
     background: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border-color);
     box-shadow: var(--shadow-sm);
     transition: all 0.3s ease;
+    position: relative;
+    padding: 1rem 0;
+    z-index: 1050;
 }
 
 .navbar-brand {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: var(--primary-color) !important;
     text-decoration: none;
+    position: relative;
+}
+
+.navbar-brand:hover {
+    color: var(--primary-dark) !important;
 }
 
 .navbar-nav .nav-link {
     font-weight: 500;
     color: var(--text-primary) !important;
     transition: all 0.3s ease;
-    padding: 0.5rem 1rem !important;
+    padding: 0.75rem 1rem !important;
     border-radius: var(--border-radius);
     margin: 0 0.25rem;
+    position: relative;
 }
 
 .navbar-nav .nav-link:hover {
@@ -72,39 +106,139 @@ body {
     background-color: var(--light-bg);
 }
 
-/* Hero Section - OrionStar 風格 */
+/* 下拉選單樣式 */
+.dropdown-menu {
+    background: var(--dark-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    z-index: 1060;
+    min-width: 200px;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+}
+
+.dropdown-item {
+    color: var(--text-primary);
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    border-radius: 0;
+}
+
+.dropdown-item:hover {
+    background-color: var(--light-bg);
+    color: var(--primary-color);
+}
+
+.dropdown-divider {
+    border-color: var(--border-color);
+    margin: 0.5rem 0;
+}
+
+/* 下拉選單基本樣式 */
+.navbar-nav .dropdown-menu {
+    display: none;
+}
+
+/* 確保導航欄容器不會遮住下拉選單 */
+.navbar-collapse {
+    overflow: visible;
+}
+
+.navbar-nav {
+    overflow: visible;
+}
+
+.nav-item {
+    overflow: visible;
+}
+
+/* 移動端下拉選單優化 */
+@media (max-width: 991.98px) {
+    .navbar-nav .dropdown-menu {
+        position: static;
+        small: none;
+        box-shadow: none;
+        border: none;
+        background-color: var(--light-bg);
+        margin: 0;
+        padding: 0.5rem 0 0.5rem 1.5rem;
+    }
+    
+    .dropdown-item {
+        padding: 0.5rem 1rem;
+        border-left: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+    
+    .dropdown-item:hover {
+        border-left-color: var(--primary-color);
+        background-color: transparent;
+        color: var(--primary-color);
+    }
+    
+    .dropdown-divider {
+        display: none;
+    }
+}
+
+/* 確保下拉選單在桌面端正確顯示 */
+@media (min-width: 992px) {
+    .navbar-nav .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1060;
+        display: none;
+        float: left;
+        min-width: 200px;
+        padding: 0.5rem 0;
+        margin: 0.125rem 0 0;
+        font-size: 1rem;
+        color: var(--text-primary);
+        text-align: left;
+        list-style: none;
+        background-color: var(--dark-bg);
+        background-clip: padding-box;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .navbar-nav .dropdown-menu.show {
+        display: block;
+    }
+}
+
+/* Hero Section - Elixir 專業風格 */
 .hero-section {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-    min-height: 70vh;
+    background: linear-gradient(135deg, var(--light-bg) 0%, var(--dark-bg) 100%);
+    min-height: 80vh;
     position: relative;
     overflow: hidden;
     display: flex;
     align-items: center;
-}
-
-.hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-    opacity: 0.1;
+    padding: 6rem 0;
 }
 
 .hero-section h1 {
     font-weight: 800;
     font-size: 3.5rem;
     line-height: 1.1;
-    color: white;
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
     margin-bottom: 1.5rem;
+}
+
+.hero-section h2 {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
 }
 
 .hero-section .lead {
     font-size: 1.25rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-secondary);
     font-weight: 400;
     margin-bottom: 2rem;
 }
@@ -116,21 +250,33 @@ body {
     font-weight: 600;
     text-transform: none;
     letter-spacing: 0.025em;
+    transition: all 0.3s ease;
 }
 
-/* 卡片樣式 - Everise Digital 風格 */
+.hero-image {
+    position: relative;
+}
+
+.hero-image i {
+    font-size: 6rem;
+    color: var(--primary-color);
+    opacity: 0.8;
+}
+
+/* 卡片樣式 - Elixir 專業風格 */
 .card {
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-lg);
     transition: all 0.3s ease;
-    background: white;
+    background: var(--dark-bg);
     box-shadow: var(--shadow-sm);
     overflow: hidden;
+    position: relative;
 }
 
 .card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-xl);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
     border-color: var(--primary-light);
 }
 
@@ -146,20 +292,20 @@ body {
 }
 
 .card-body {
-    padding: 1.5rem;
+    padding: 2rem;
 }
 
 .card-title {
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 0.75rem;
-    font-size: 1.125rem;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
 }
 
 .card-text {
     color: var(--text-secondary);
     line-height: 1.6;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 /* 產品卡片特殊樣式 */
@@ -178,18 +324,19 @@ body {
     background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
     transform: scaleX(0);
     transition: transform 0.3s ease;
+    z-index: 3;
 }
 
 .product-card:hover::before {
     transform: scaleX(1);
 }
 
-/* 按鈕樣式 - Everise Digital 風格 */
+/* 按鈕樣式 - Elixir 專業風格 */
 .btn {
     border-radius: var(--border-radius);
     font-weight: 600;
     transition: all 0.3s ease;
-    border: none;
+    border: 2px solid transparent;
     padding: 0.75rem 1.5rem;
     font-size: 0.95rem;
     letter-spacing: 0.025em;
@@ -198,31 +345,17 @@ body {
     overflow: hidden;
 }
 
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s ease;
-}
-
-.btn:hover::before {
-    left: 100%;
-}
-
 .btn-primary {
     background: var(--primary-color);
     color: white;
     box-shadow: var(--shadow-sm);
+    border: 2px solid transparent;
 }
 
 .btn-primary:hover {
-    background: var(--primary-dark);
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
+    background: var(--primary-dark);
     color: white;
 }
 
@@ -237,6 +370,21 @@ body {
     color: white;
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+    border-color: var(--primary-dark);
+}
+
+.btn-outline-light {
+    border: 2px solid var(--text-secondary);
+    color: var(--text-primary);
+    background: transparent;
+}
+
+.btn-outline-light:hover {
+    background: var(--text-primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--text-primary);
 }
 
 .btn-lg {
@@ -727,54 +875,63 @@ footer a:hover {
     line-height: 1;
 }
 
-/* 特色卡片樣式 */
+/* 特色卡片樣式 - Elixir 專業風格 */
 .feature-card {
-    background: white;
+    background: var(--dark-bg);
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-sm);
     transition: all 0.3s ease;
     border: 1px solid var(--border-color);
     height: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
 .feature-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-xl);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
     border-color: var(--primary-light);
 }
 
 .feature-icon {
     transition: transform 0.3s ease;
+    color: var(--primary-color);
 }
 
 .feature-card:hover .feature-icon {
     transform: scale(1.1);
+    color: var(--primary-dark);
 }
 
-/* 客戶見證樣式 */
+/* 客戶見證樣式 - Elixir 專業風格 */
 .testimonial-card {
-    background: var(--light-bg);
+    background: var(--dark-bg);
     border-radius: var(--border-radius-lg);
     border-left: 4px solid var(--primary-color);
     transition: all 0.3s ease;
     height: 100%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
 }
 
 .testimonial-card:hover {
     transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-    background: white;
+    box-shadow: var(--shadow-lg);
+    border-left-color: var(--primary-dark);
 }
 
 .testimonial-content p {
     font-style: italic;
     font-size: 1.1rem;
     line-height: 1.6;
+    color: var(--text-secondary);
 }
 
 .testimonial-author {
     color: var(--primary-color);
     font-size: 0.9rem;
+    font-weight: 600;
 }
 
 /* 產品分類樣式 */

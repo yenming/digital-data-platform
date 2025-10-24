@@ -79,11 +79,12 @@ orionstar-com-tw-website/
    ```
 
 4. **訪問應用程式**
+   ```
    - 網站：http://localhost:3000
    - MyAdmin：http://localhost:8080
-
-
    ```
+
+
 
 ## 🔧 開發指令
 
