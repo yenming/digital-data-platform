@@ -14,6 +14,7 @@ require('dotenv').config();
 const { sequelize, testConnection, syncDatabase, closeConnection } = require('./app/config/database');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
+const adminRoutes = require('./routes/admin');
 const homeRoutes = require('./routes/home');
 const productsRoutes = require('./routes/products');
 const dashboardRoutes = require('./routes/dashboard');
@@ -91,6 +92,7 @@ app.use((req, res, next) => {
 app.use('/', homeRoutes);
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
+app.use('/dashboard/admin', adminRoutes);
 app.use('/products', productsRoutes);
 app.use('/dashboard', dashboardRoutes);
 

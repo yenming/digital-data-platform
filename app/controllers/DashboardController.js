@@ -6,6 +6,12 @@ class DashboardController {
   static async index(req, res) {
     try {
       const userId = req.session.user.id;
+      const userRole = req.session.user.role;
+      
+      // 根據用戶角色重定向到相應的儀表板
+      if (userRole === 'system_admin') {
+        return res.redirect('/dashboard/admin');
+      }
       
       // 簡化版本 - 直接渲染儀表板頁面
       res.render('dashboard/index', {

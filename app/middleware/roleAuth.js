@@ -29,10 +29,15 @@ const requireRole = (requiredRole) => {
     try {
       // 檢查用戶是否已登入
       if (!req.session || !req.session.user) {
-        return res.status(401).json({
-          success: false,
-          message: '請先登入'
-        });
+        // 如果是 API 請求，返回 JSON
+        if (req.xhr || req.headers.accept?.indexOf('json') > -1) {
+          return res.status(401).json({
+            success: false,
+            message: '請先登入'
+          });
+        }
+        // 否則重定向到登入頁面
+        return res.redirect('/auth/login');
       }
 
       const userRole = req.session.user.role;
@@ -46,17 +51,27 @@ const requireRole = (requiredRole) => {
         req.userRoleName = ROLE_NAMES[userRole];
         next();
       } else {
-        return res.status(403).json({
-          success: false,
-          message: `權限不足，需要 ${ROLE_NAMES[requiredRole]} 或更高權限`
-        });
+        // 如果是 API 請求，返回 JSON
+        if (req.xhr || req.headers.accept?.indexOf('json') > -1) {
+          return res.status(403).json({
+            success: false,
+            message: `權限不足，需要 ${ROLE_NAMES[requiredRole]} 或更高權限`
+          });
+        }
+        // 否則重定向到儀表板
+        return res.redirect('/dashboard');
       }
     } catch (error) {
       console.error('角色權限檢查錯誤:', error);
-      return res.status(500).json({
-        success: false,
-        message: '權限檢查失敗'
-      });
+      // 如果是 API 請求，返回 JSON
+      if (req.xhr || req.headers.accept?.indexOf('json') > -1) {
+        return res.status(500).json({
+          success: false,
+          message: '權限檢查失敗'
+        });
+      }
+      // 否則重定向到登入頁面
+      return res.redirect('/auth/login');
     }
   };
 };
