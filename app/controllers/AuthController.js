@@ -238,22 +238,30 @@ class AuthController {
   // 登出
   static async logout(req, res) {
     try {
+      // 先設置 flash 訊息，再清除 session
+      req.flash('success_msg', '您已成功登出');
+      
       // 清除 Session
       req.session.destroy((err) => {
         if (err) {
           console.error('Session 清除錯誤:', err);
         }
+        
+        // 清除 Cookie
+        res.clearCookie('auth_token');
+        res.clearCookie('connect.sid');
+        
+        // 重定向到首頁
+        res.redirect('/');
       });
-
-      // 清除 Cookie
-      res.clearCookie('auth_token');
-      res.clearCookie('connect.sid');
-
-      req.flash('success_msg', '您已成功登出');
-      res.redirect('/');
     } catch (error) {
       console.error('登出錯誤:', error);
-      req.flash('error_msg', '登出時發生錯誤');
+      // 如果發生錯誤，嘗試設置錯誤訊息
+      try {
+        req.flash('error_msg', '登出時發生錯誤');
+      } catch (flashError) {
+        console.error('Flash 訊息設置失敗:', flashError);
+      }
       res.redirect('/');
     }
   }
