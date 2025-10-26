@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# OrionStar Taiwan Website 啟動腳本
+# digital data platform 啟動腳本
 
-echo "🚀 啟動 OrionStar Taiwan Website..."
+echo "🚀 啟動 digital data platform..."
 
 # 檢查是否安裝了 Docker
 if ! command -v docker &> /dev/null; then
