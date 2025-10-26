@@ -1,0 +1,419 @@
+<%- include('../layouts/main', { 
+    title: '數據報表',
+    page: 'dashboard',
+    body: `
+<div class="container-fluid">
+    <!-- 頁面標題 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-1">數據報表</h1>
+                    <p class="text-muted mb-0">查看和導出您的數據分析報表</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" onclick="exportData('csv')">
+                        <i class="fas fa-download me-1"></i>導出CSV
+                    </button>
+                    <button class="btn btn-outline-primary" onclick="exportData('json')">
+                        <i class="fas fa-download me-1"></i>導出JSON
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 篩選器 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <form id="filterForm" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="startDate" class="form-label">開始日期</label>
+                            <input type="date" class="form-control" id="startDate" name="startDate" value="<%= filters.dateRange.startDate || '' %>">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="endDate" class="form-label">結束日期</label>
+                            <input type="date" class="form-control" id="endDate" name="endDate" value="<%= filters.dateRange.endDate || '' %>">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="platforms" class="form-label">平台</label>
+                            <select class="form-select" id="platforms" name="platforms" multiple>
+                                <% if (userConnections && userConnections.length > 0) { %>
+                                    <% userConnections.forEach(connection => { %>
+                                        <option value="<%= connection.id %>" 
+                                                <%= filters.platforms && filters.platforms.includes(connection.id.toString()) ? 'selected' : '' %>>
+                                            <%= connection.platform.displayName %>
+                                        </option>
+                                    <% }) %>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="metrics" class="form-label">指標</label>
+                            <select class="form-select" id="metrics" name="metrics" multiple>
+                                <option value="impressions">曝光數</option>
+                                <option value="clicks">點擊數</option>
+                                <option value="spend">花費</option>
+                                <option value="reach">觸及數</option>
+                                <option value="sessions">工作階段</option>
+                                <option value="users">使用者</option>
+                                <option value="ctr">點擊率</option>
+                                <option value="cpc">每次點擊成本</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search me-1"></i>篩選
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="resetFilters()">
+                                <i class="fas fa-undo me-1"></i>重置
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 報表摘要 -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-2x text-primary mb-2"></i>
+                    <h5 class="mb-1" id="totalRecords">-</h5>
+                    <small class="text-muted">總記錄數</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar fa-2x text-success mb-2"></i>
+                    <h5 class="mb-1" id="dateRange">-</h5>
+                    <small class="text-muted">日期範圍</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-plug fa-2x text-info mb-2"></i>
+                    <h5 class="mb-1" id="platformCount">-</h5>
+                    <small class="text-muted">平台數量</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-tags fa-2x text-warning mb-2"></i>
+                    <h5 class="mb-1" id="metricCount">-</h5>
+                    <small class="text-muted">指標類型</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 數據表格 -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">報表數據</h5>
+                        <div class="d-flex gap-2">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-primary btn-sm active" data-format="table">
+                                    <i class="fas fa-table me-1"></i>表格
+                                </button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" data-format="chart">
+                                    <i class="fas fa-chart-bar me-1"></i>圖表
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- 表格視圖 -->
+                    <div id="tableView" class="table-view">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="reportTable">
+                                <thead>
+                                    <tr>
+                                        <th>日期</th>
+                                        <th>平台</th>
+                                        <th>指標</th>
+                                        <th>數值</th>
+                                        <th>類型</th>
+                                        <th>維度1</th>
+                                        <th>維度2</th>
+                                        <th>維度3</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if (reportData && reportData.length > 0) { %>
+                                        <% reportData.forEach(item => { %>
+                                            <tr>
+                                                <td><%= item.date %></td>
+                                                <td><%= item.platform %></td>
+                                                <td><%= item.metric %></td>
+                                                <td><%= formatValue(item.value, item.type) %></td>
+                                                <td><span class="badge bg-secondary"><%= item.type %></span></td>
+                                                <td><%= item.dimension1 || '-' %></td>
+                                                <td><%= item.dimension2 || '-' %></td>
+                                                <td><%= item.dimension3 || '-' %></td>
+                                            </tr>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="8" class="text-center text-muted py-4">
+                                                <i class="fas fa-inbox fa-2x mb-2"></i>
+                                                <div>暫無數據</div>
+                                            </td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 圖表視圖 -->
+                    <div id="chartView" class="chart-view" style="display: none;">
+                        <canvas id="reportChart" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let reportChart;
+let currentFormat = '<%= currentFormat || "table" %>';
+
+// 頁面載入時初始化
+document.addEventListener('DOMContentLoaded', function() {
+    initializeReport();
+    setupEventListeners();
+});
+
+// 初始化報表
+function initializeReport() {
+    updateSummary();
+    setupFormatButtons();
+    
+    if (currentFormat === 'chart') {
+        showChartView();
+    }
+}
+
+// 更新摘要信息
+function updateSummary() {
+    const data = <%- JSON.stringify(reportData || []) %>;
+    
+    document.getElementById('totalRecords').textContent = data.length;
+    
+    if (data.length > 0) {
+        const dates = data.map(item => item.date).sort();
+        const startDate = dates[0];
+        const endDate = dates[dates.length - 1];
+        document.getElementById('dateRange').textContent = `${startDate} ~ ${endDate}`;
+        
+        const platforms = [...new Set(data.map(item => item.platform))];
+        document.getElementById('platformCount').textContent = platforms.length;
+        
+        const metrics = [...new Set(data.map(item => item.metric))];
+        document.getElementById('metricCount').textContent = metrics.length;
+    } else {
+        document.getElementById('dateRange').textContent = '-';
+        document.getElementById('platformCount').textContent = '0';
+        document.getElementById('metricCount').textContent = '0';
+    }
+}
+
+// 設置事件監聽器
+function setupEventListeners() {
+    // 篩選表單提交
+    document.getElementById('filterForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        applyFilters();
+    });
+    
+    // 格式切換按鈕
+    document.querySelectorAll('[data-format]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const format = this.dataset.format;
+            switchFormat(format);
+        });
+    });
+}
+
+// 應用篩選器
+function applyFilters() {
+    const formData = new FormData(document.getElementById('filterForm'));
+    const params = new URLSearchParams();
+    
+    for (const [key, value] of formData.entries()) {
+        if (value) {
+            params.append(key, value);
+        }
+    }
+    
+    window.location.href = `/dashboard/reports?${params}`;
+}
+
+// 重置篩選器
+function resetFilters() {
+    document.getElementById('filterForm').reset();
+    window.location.href = '/dashboard/reports';
+}
+
+// 切換顯示格式
+function switchFormat(format) {
+    currentFormat = format;
+    
+    // 更新按鈕狀態
+    document.querySelectorAll('[data-format]').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.format === format) {
+            btn.classList.add('active');
+        }
+    });
+    
+    if (format === 'table') {
+        showTableView();
+    } else if (format === 'chart') {
+        showChartView();
+    }
+}
+
+// 顯示表格視圖
+function showTableView() {
+    document.getElementById('tableView').style.display = 'block';
+    document.getElementById('chartView').style.display = 'none';
+}
+
+// 顯示圖表視圖
+function showChartView() {
+    document.getElementById('tableView').style.display = 'none';
+    document.getElementById('chartView').style.display = 'block';
+    
+    if (!reportChart) {
+        createReportChart();
+    }
+}
+
+// 創建報表圖表
+function createReportChart() {
+    const ctx = document.getElementById('reportChart').getContext('2d');
+    const data = <%- JSON.stringify(reportData || []) %>;
+    
+    if (reportChart) {
+        reportChart.destroy();
+    }
+    
+    // 按平台和指標分組數據
+    const groupedData = {};
+    data.forEach(item => {
+        const key = `${item.platform}_${item.metric}`;
+        if (!groupedData[key]) {
+            groupedData[key] = {
+                platform: item.platform,
+                metric: item.metric,
+                data: []
+            };
+        }
+        groupedData[key].data.push({
+            date: item.date,
+            value: item.value
+        });
+    });
+    
+    const datasets = Object.values(groupedData).map((group, index) => ({
+        label: `${group.platform} - ${group.metric}`,
+        data: group.data.map(point => point.value),
+        borderColor: getColor(index),
+        backgroundColor: getColor(index) + '20',
+        tension: 0.4
+    }));
+    
+    const labels = data.length > 0 ? [...new Set(data.map(item => item.date))].sort() : [];
+    
+    reportChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+// 獲取顏色
+function getColor(index) {
+    const colors = [
+        '#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8',
+        '#6f42c1', '#e83e8c', '#fd7e14', '#20c997', '#6c757d'
+    ];
+    return colors[index % colors.length];
+}
+
+// 設置格式按鈕
+function setupFormatButtons() {
+    document.querySelectorAll('[data-format]').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.format === currentFormat) {
+            btn.classList.add('active');
+        }
+    });
+}
+
+// 導出數據
+function exportData(format) {
+    const formData = new FormData(document.getElementById('filterForm'));
+    const params = new URLSearchParams();
+    
+    for (const [key, value] of formData.entries()) {
+        if (value) {
+            params.append(key, value);
+        }
+    }
+    params.append('format', format);
+    
+    window.open(`/dashboard/export?${params}`, '_blank');
+}
+
+// 格式化數值
+function formatValue(value, type) {
+    switch (type) {
+        case 'currency':
+            return new Intl.NumberFormat('zh-TW', {
+                style: 'currency',
+                currency: 'TWD'
+            }).format(value);
+        case 'percentage':
+            return value.toFixed(2) + '%';
+        default:
+            return new Intl.NumberFormat().format(value);
+    }
+}
+</script>
+`
+}) %>

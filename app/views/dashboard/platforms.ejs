@@ -1,0 +1,298 @@
+<%- include('../layouts/main', { 
+    title: '平台管理',
+    page: 'dashboard',
+    body: `
+<div class="container-fluid">
+    <!-- 頁面標題 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-1">平台管理</h1>
+                    <p class="text-muted mb-0">管理您的平台連接和數據同步</p>
+                </div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#connectModal">
+                    <i class="fas fa-plus me-1"></i>連接新平台
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 已連接平台 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0">已連接平台</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row" id="connectedPlatforms">
+                        <% if (userConnections && userConnections.length > 0) { %>
+                            <% userConnections.forEach(connection => { %>
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div class="card border">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="flex-shrink-0">
+                                                    <i class="<%= connection.platform.icon %> fa-2x" style="color: <%= connection.platform.color %>"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="mb-1"><%= connection.platform.displayName %></h6>
+                                                    <small class="text-muted"><%= connection.accountName %></small>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="#" onclick="syncPlatform(<%= connection.id %>)">
+                                                            <i class="fas fa-sync me-2"></i>同步數據
+                                                        </a></li>
+                                                        <li><a class="dropdown-item" href="#" onclick="editConnection(<%= connection.id %>)">
+                                                            <i class="fas fa-edit me-2"></i>編輯
+                                                        </a></li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item text-danger" href="#" onclick="disconnectPlatform(<%= connection.id %>)">
+                                                            <i class="fas fa-trash me-2"></i>斷開連接
+                                                        </a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="row text-center">
+                                                <div class="col-4">
+                                                    <div class="small text-muted">狀態</div>
+                                                    <span class="badge bg-<%= connection.syncStatus === 'success' ? 'success' : 'danger' %>">
+                                                        <%= connection.syncStatus === 'success' ? '正常' : '異常' %>
+                                                    </span>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="small text-muted">數據量</div>
+                                                    <div class="fw-bold">-</div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="small text-muted">最後同步</div>
+                                                    <div class="small">
+                                                        <%= connection.lastSyncAt ? new Date(connection.lastSyncAt).toLocaleDateString() : '從未' %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <div class="col-12 text-center py-5">
+                                <i class="fas fa-plug fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">尚未連接任何平台</h5>
+                                <p class="text-muted">點擊上方按鈕開始連接您的第一個平台</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 可用平台 -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0">可用平台</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <% if (availablePlatforms && availablePlatforms.length > 0) { %>
+                            <% availablePlatforms.forEach(platform => { %>
+                                <div class="col-lg-2 col-md-4 col-6 mb-4">
+                                    <div class="text-center p-3 border rounded cursor-pointer" onclick="showConnectModal('<%= platform.id %>', '<%= platform.displayName %>')">
+                                        <i class="<%= platform.icon %> fa-3x mb-3" style="color: <%= platform.color %>"></i>
+                                        <h6 class="mb-1"><%= platform.displayName %></h6>
+                                        <small class="text-muted"><%= platform.description %></small>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <div class="col-12 text-center py-5">
+                                <i class="fas fa-exclamation-triangle fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">暫無可用平台</h5>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 連接平台模態框 -->
+<div class="modal fade" id="connectModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">連接平台</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="connectForm">
+                <div class="modal-body">
+                    <input type="hidden" id="platformId" name="platformId">
+                    
+                    <div class="mb-3">
+                        <label for="platformName" class="form-label">平台</label>
+                        <input type="text" class="form-control" id="platformName" readonly>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="accountId" class="form-label">帳戶ID *</label>
+                        <input type="text" class="form-control" id="accountId" name="accountId" required>
+                        <div class="form-text">請輸入平台帳戶ID或廣告帳戶ID</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="accountName" class="form-label">帳戶名稱 *</label>
+                        <input type="text" class="form-control" id="accountName" name="accountName" required>
+                        <div class="form-text">請輸入易於識別的帳戶名稱</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="accessToken" class="form-label">存取權杖 *</label>
+                        <textarea class="form-control" id="accessToken" name="accessToken" rows="3" required></textarea>
+                        <div class="form-text">請輸入平台的存取權杖或API金鑰</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="refreshToken" class="form-label">刷新權杖</label>
+                        <textarea class="form-control" id="refreshToken" name="refreshToken" rows="2"></textarea>
+                        <div class="form-text">可選，用於自動刷新存取權杖</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="config" class="form-label">額外配置</label>
+                        <textarea class="form-control" id="config" name="config" rows="3" placeholder='{"key": "value"}'></textarea>
+                        <div class="form-text">可選，JSON格式的額外配置參數</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">連接</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// 顯示連接模態框
+function showConnectModal(platformId, platformName) {
+    document.getElementById('platformId').value = platformId;
+    document.getElementById('platformName').value = platformName;
+    
+    const modal = new bootstrap.Modal(document.getElementById('connectModal'));
+    modal.show();
+}
+
+// 連接平台表單提交
+document.getElementById('connectForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData);
+    
+    try {
+        const response = await fetch('/dashboard/platforms/connect', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showAlert('平台連接成功', 'success');
+            location.reload();
+        } else {
+            showAlert('連接失敗: ' + result.message, 'danger');
+        }
+    } catch (error) {
+        console.error('連接平台失敗:', error);
+        showAlert('連接失敗', 'danger');
+    }
+});
+
+// 同步平台數據
+async function syncPlatform(connectionId) {
+    try {
+        showAlert('正在同步數據...', 'info');
+        
+        const response = await fetch(`/dashboard/sync/${connectionId}`, {
+            method: 'POST'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showAlert('數據同步成功', 'success');
+            location.reload();
+        } else {
+            showAlert('同步失敗: ' + result.message, 'danger');
+        }
+    } catch (error) {
+        console.error('同步數據失敗:', error);
+        showAlert('同步失敗', 'danger');
+    }
+}
+
+// 編輯連接
+function editConnection(connectionId) {
+    // TODO: 實現編輯功能
+    showAlert('編輯功能開發中', 'info');
+}
+
+// 斷開平台連接
+async function disconnectPlatform(connectionId) {
+    if (!confirm('確定要斷開此平台連接嗎？這將刪除所有相關數據。')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/dashboard/platforms/${connectionId}`, {
+            method: 'DELETE'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showAlert('平台連接已斷開', 'success');
+            location.reload();
+        } else {
+            showAlert('斷開失敗: ' + result.message, 'danger');
+        }
+    } catch (error) {
+        console.error('斷開連接失敗:', error);
+        showAlert('斷開失敗', 'danger');
+    }
+}
+
+// 顯示提示訊息
+function showAlert(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.top = '20px';
+    alertDiv.style.right = '20px';
+    alertDiv.style.zIndex = '9999';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+</script>
+`
+}) %>

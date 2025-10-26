@@ -16,6 +16,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const homeRoutes = require('./routes/home');
 const productsRoutes = require('./routes/products');
+const dashboardRoutes = require('./routes/dashboard');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -91,6 +92,7 @@ app.use('/', homeRoutes);
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/products', productsRoutes);
+app.use('/dashboard', dashboardRoutes);
 
 // 404 錯誤處理
 app.use('*', (req, res) => {

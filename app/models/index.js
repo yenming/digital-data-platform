@@ -5,6 +5,11 @@ const Category = require('./Category');
 const Tag = require('./Tag');
 const Comment = require('./Comment');
 const Setting = require('./Setting');
+const Platform = require('./Platform');
+const PlatformConnection = require('./PlatformConnection');
+const DataMetric = require('./DataMetric');
+const Dashboard = require('./Dashboard');
+const Widget = require('./Widget');
 
 // 定義關聯
 User.hasMany(Post, { foreignKey: 'authorId', as: 'posts' });
@@ -48,6 +53,22 @@ Comment.belongsTo(Comment, { foreignKey: 'parentId', as: 'parent' });
 Category.hasMany(Category, { foreignKey: 'parentId', as: 'children' });
 Category.belongsTo(Category, { foreignKey: 'parentId', as: 'parent' });
 
+// 數據平台關聯
+User.hasMany(PlatformConnection, { foreignKey: 'userId', as: 'connections' });
+PlatformConnection.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
+Platform.hasMany(PlatformConnection, { foreignKey: 'platformId', as: 'connections' });
+PlatformConnection.belongsTo(Platform, { foreignKey: 'platformId', as: 'platform' });
+
+PlatformConnection.hasMany(DataMetric, { foreignKey: 'connectionId', as: 'metrics' });
+DataMetric.belongsTo(PlatformConnection, { foreignKey: 'connectionId', as: 'connection' });
+
+User.hasMany(Dashboard, { foreignKey: 'userId', as: 'dashboards' });
+Dashboard.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
+Dashboard.hasMany(Widget, { foreignKey: 'dashboardId', as: 'widgets' });
+Widget.belongsTo(Dashboard, { foreignKey: 'dashboardId', as: 'dashboard' });
+
 // 導出所有模型
 module.exports = {
   sequelize,
@@ -56,5 +77,10 @@ module.exports = {
   Category,
   Tag,
   Comment,
-  Setting
+  Setting,
+  Platform,
+  PlatformConnection,
+  DataMetric,
+  Dashboard,
+  Widget
 };

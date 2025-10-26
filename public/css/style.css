@@ -1,4 +1,4 @@
-/* 自定義樣式 - Elixir 專業風格 */
+/* 全媒體數據儀表板樣式 */
 
 /* 全域樣式 */
 :root {
@@ -60,7 +60,7 @@ body {
     padding: var(--section-padding);
 }
 
-/* 導航欄樣式 - Elixir 專業風格 */
+/* 導航欄樣式 */
 .navbar {
     background: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(10px);
@@ -210,7 +210,7 @@ body {
     }
 }
 
-/* Hero Section - Elixir 專業風格 */
+/* Hero Section */
 .hero-section {
     background: linear-gradient(135deg, var(--light-bg) 0%, var(--dark-bg) 100%);
     min-height: 80vh;
@@ -263,7 +263,7 @@ body {
     opacity: 0.8;
 }
 
-/* 卡片樣式 - Elixir 專業風格 */
+/* 卡片樣式 */
 .card {
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-lg);
@@ -331,7 +331,7 @@ body {
     transform: scaleX(1);
 }
 
-/* 按鈕樣式 - Elixir 專業風格 */
+/* 按鈕樣式 */
 .btn {
     border-radius: var(--border-radius);
     font-weight: 600;
@@ -398,7 +398,7 @@ body {
     font-size: 0.875rem;
 }
 
-/* 表單樣式 - Everise Digital 風格 */
+/* 表單樣式 */
 .form-control {
     border-radius: var(--border-radius);
     border: 2px solid var(--border-color);
@@ -444,7 +444,7 @@ body {
     border-radius: 0 var(--border-radius) var(--border-radius) 0;
 }
 
-/* 分頁樣式 - Everise Digital 風格 */
+/* 分頁樣式 */
 .pagination .page-link {
     border-radius: var(--border-radius);
     margin: 0 0.25rem;
@@ -470,7 +470,7 @@ body {
     box-shadow: var(--shadow-sm);
 }
 
-/* 徽章樣式 - Everise Digital 風格 */
+/* 徽章樣式 */
 .badge {
     font-size: 0.75rem;
     padding: 0.375rem 0.75rem;
@@ -492,7 +492,7 @@ body {
     color: white !important;
 }
 
-/* 頁腳樣式 - Everise Digital 風格 */
+/* 頁腳樣式 */
 footer {
     background: var(--dark-bg) !important;
     border-top: 1px solid var(--border-color);
@@ -537,7 +537,7 @@ footer a:hover {
     color: var(--primary-light) !important;
 }
 
-/* 響應式設計 - Everise Digital 風格 */
+/* 響應式設計 */
 @media (max-width: 1200px) {
     .hero-section h1 {
         font-size: 3rem;
@@ -627,7 +627,7 @@ footer a:hover {
     }
 }
 
-/* 動畫效果 - Everise Digital 風格 */
+/* 動畫效果 */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -700,7 +700,7 @@ footer a:hover {
     transform: translateY(0);
 }
 
-/* 載入動畫 - Everise Digital 風格 */
+/* 載入動畫 */
 .loading {
     display: inline-block;
     width: 24px;
@@ -731,7 +731,7 @@ footer a:hover {
     }
 }
 
-/* 工具提示樣式 - Everise Digital 風格 */
+/* 工具提示樣式 */
 .tooltip {
     font-size: 0.875rem;
     background: var(--dark-bg);
@@ -758,7 +758,7 @@ footer a:hover {
     transition: width 0.6s ease;
 }
 
-/* 自定義滾動條 - Everise Digital 風格 */
+/* 自定義滾動條 */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -854,9 +854,316 @@ footer a:hover {
     }
 }
 
-/* OrionStar 風格樣式 */
+/* 數據儀表板樣式 */
 .min-vh-50 {
     min-height: 50vh;
+}
+
+/* 平台卡片樣式 */
+.platform-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid var(--border-color);
+    cursor: pointer;
+    height: 100%;
+}
+
+.platform-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+}
+
+.platform-card i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.platform-card h6 {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.platform-card small {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+/* 儀表板卡片樣式 */
+.dashboard-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.dashboard-card .card-header {
+    background: var(--light-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+}
+
+.dashboard-card .card-body {
+    padding: 1.5rem;
+}
+
+/* KPI 卡片樣式 */
+.kpi-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+    height: 100%;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.kpi-card .kpi-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.kpi-card .kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.kpi-card .kpi-label {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* 圖表容器樣式 */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+.chart-container canvas {
+    max-height: 100%;
+}
+
+/* 表格樣式 */
+.data-table {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.data-table .table {
+    margin-bottom: 0;
+}
+
+.data-table .table th {
+    background: var(--light-bg);
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-primary);
+    padding: 1rem;
+}
+
+.data-table .table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.data-table .table tbody tr:hover {
+    background: var(--light-bg);
+}
+
+/* 狀態指示器 */
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-indicator::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-indicator.success::before {
+    background-color: var(--success-color);
+}
+
+.status-indicator.danger::before {
+    background-color: var(--danger-color);
+}
+
+.status-indicator.warning::before {
+    background-color: var(--warning-color);
+}
+
+.status-indicator.info::before {
+    background-color: var(--accent-color);
+}
+
+/* 載入狀態 */
+.loading-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: var(--text-muted);
+}
+
+.loading-state .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-top: 2px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 0.5rem;
+}
+
+/* 空狀態 */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.empty-state h5 {
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.empty-state p {
+    margin-bottom: 0;
+    font-size: 0.875rem;
+}
+
+/* 篩選器樣式 */
+.filter-section {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+}
+
+.filter-section .form-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.filter-section .form-control,
+.filter-section .form-select {
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+
+.filter-section .form-control:focus,
+.filter-section .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* 按鈕群組樣式 */
+.btn-group .btn {
+    border-radius: 0;
+}
+
+.btn-group .btn:first-child {
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+}
+
+.btn-group .btn:last-child {
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+
+.btn-group .btn.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+    .platform-card {
+        padding: 1rem;
+    }
+    
+    .platform-card i {
+        font-size: 2rem;
+    }
+    
+    .kpi-card {
+        padding: 1rem;
+    }
+    
+    .kpi-card .kpi-value {
+        font-size: 1.5rem;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+    
+    .filter-section {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .platform-card {
+        margin-bottom: 1rem;
+    }
+    
+    .kpi-card .kpi-value {
+        font-size: 1.25rem;
+    }
+    
+    .chart-container {
+        height: 200px;
+    }
 }
 
 /* 統計數據樣式 */
@@ -875,7 +1182,7 @@ footer a:hover {
     line-height: 1;
 }
 
-/* 特色卡片樣式 - Elixir 專業風格 */
+/* 特色卡片樣式 */
 .feature-card {
     background: var(--dark-bg);
     border-radius: var(--border-radius-lg);
@@ -903,7 +1210,7 @@ footer a:hover {
     color: var(--primary-dark);
 }
 
-/* 客戶見證樣式 - Elixir 專業風格 */
+/* 客戶見證樣式 */
 .testimonial-card {
     background: var(--dark-bg);
     border-radius: var(--border-radius-lg);
