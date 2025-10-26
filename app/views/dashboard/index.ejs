@@ -149,6 +149,11 @@
                     </div>
                     <div class="info">
                         <a href="#" class="d-block"><%= user ? user.username : 'Guest' %></a>
+                        <% if (user) { %>
+                        <span class="badge badge-<%= user.role === 'system_admin' ? 'danger' : user.role === 'agent' ? 'warning' : user.role === 'brand' ? 'info' : 'success' %>">
+                            <%= user.role === 'system_admin' ? '系統管理員' : user.role === 'agent' ? '代理商' : user.role === 'brand' ? '品牌' : '個人經營' %>
+                        </span>
+                        <% } %>
                     </div>
                 </div>
 
@@ -220,6 +225,31 @@
                                 </li>
                             </ul>
                         </li>
+                        <% if (user && (user.role === 'system_admin' || user.role === 'agent')) { %>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>
+                                    用戶管理
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/dashboard/users" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>用戶列表</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/dashboard/users/create" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>創建用戶</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <% } %>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-cogs"></i>

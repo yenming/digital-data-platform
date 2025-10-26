@@ -1,36 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const { requireAuth, requireAdmin } = require('../app/middleware/auth');
+const UserController = require('../app/controllers/UserController');
+const { requireRole, canManageUser } = require('../app/middleware/roleAuth');
+const { requireAuth } = require('../app/middleware/auth');
 
-// 使用者儀表板
-router.get('/dashboard', requireAuth, (req, res) => {
-  res.render('users/dashboard', {
-    title: '使用者儀表板',
-    user: req.session.user
-  });
-});
+// 所有路由都需要登入
+router.use(requireAuth);
 
-// 使用者設定
-router.get('/profile', requireAuth, (req, res) => {
-  res.render('users/profile', {
-    title: '個人資料',
-    user: req.session.user
-  });
-});
+// 用戶列表 - 需要代理商或更高權限
+router.get('/', requireRole('agent'), UserController.getUserList);
 
-// 更新個人資料
-router.post('/profile', requireAuth, (req, res) => {
-  // 這裡可以添加更新個人資料的邏輯
-  req.flash('success_msg', '個人資料已更新');
-  res.redirect('/users/profile');
-});
+// 獲取可管理的角色列表
+router.get('/manageable-roles', UserController.getManageableRoles);
 
-// 管理員面板
-router.get('/admin', requireAdmin, (req, res) => {
-  res.render('users/admin', {
-    title: '管理員面板',
-    user: req.session.user
-  });
-});
+// 用戶統計信息 - 需要代理商或更高權限
+router.get('/stats', requireRole('agent'), UserController.getUserStats);
+
+// 創建用戶 - 需要代理商或更高權限
+router.post('/', requireRole('agent'), UserController.createUser);
+
+// 獲取用戶詳情 - 需要代理商或更高權限
+router.get('/:userId', requireRole('agent'), UserController.getUserDetail);
+
+// 更新用戶 - 需要代理商或更高權限
+router.put('/:userId', requireRole('agent'), UserController.updateUser);
+
+// 刪除用戶 - 需要代理商或更高權限
+router.delete('/:userId', requireRole('agent'), UserController.deleteUser);
 
 module.exports = router;
