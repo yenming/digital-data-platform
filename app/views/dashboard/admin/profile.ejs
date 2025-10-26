@@ -124,6 +124,16 @@
 
             <section class="content">
                 <div class="container-fluid">
+                    <!-- Flash Messages - 只在有錯誤時顯示 -->
+                    <% if (typeof error_msg !== 'undefined' && error_msg && error_msg.trim() !== '') { %>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle"></i> <%= error_msg %>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    <% } %>
+                    
                     <div class="row">
                         <div class="col-md-8">
                             <div class="card">
@@ -169,14 +179,46 @@
                                                 <div class="form-group">
                                                     <label for="role">角色</label>
                                                     <input type="text" class="form-control" id="role" 
-                                                           value="系統管理員" readonly>
+                                                           value="<%= user.role === 'system_admin' ? '系統管理員' : user.role === 'agent' ? '代理商' : user.role === 'brand' ? '品牌' : '個人經營' %>" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="status">狀態</label>
-                                                    <input type="text" class="form-control" id="status" 
-                                                           value="<%= user && user.isActive ? '啟用' : '停用' %>" readonly>
+                                                    <label for="isActive">帳號狀態</label>
+                                                        <input type="text" class="form-control" id="isActive" 
+                                                        value="<%= user.isActive ? '啟用' : '停用' %>" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="emailVerified">電子郵件驗證</label>
+                                                    <input type="text" class="form-control" id="emailVerified" 
+                                                           value="<%= user.emailVerified ? '已驗證' : '未驗證' %>" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="lastLogin">最後登入</label>
+                                                    <input type="text" class="form-control" id="lastLogin" 
+                                                           value="<%= user.lastLogin ? new Date(user.lastLogin).toLocaleString('zh-TW') : '從未登入' %>" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="createdAt">註冊時間</label>
+                                                    <input type="text" class="form-control" id="createdAt" 
+                                                           value="<%= new Date(user.createdAt).toLocaleString('zh-TW') %>" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="updatedAt">最後更新</label>
+                                                    <input type="text" class="form-control" id="updatedAt" 
+                                                           value="<%= new Date(user.updatedAt).toLocaleString('zh-TW') %>" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -190,66 +232,6 @@
                                         </a>
                                     </div>
                                 </form>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">帳戶資訊</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="info-box">
-                                        <span class="info-box-icon bg-info"><i class="fas fa-user"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">用戶名</span>
-                                            <span class="info-box-number"><%= user ? user.username : 'N/A' %></span>
-                                        </div>
-                                    </div>
-                                    <div class="info-box">
-                                        <span class="info-box-icon bg-success"><i class="fas fa-envelope"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">電子郵件</span>
-                                            <span class="info-box-number"><%= user ? user.email : 'N/A' %></span>
-                                        </div>
-                                    </div>
-                                    <div class="info-box">
-                                        <span class="info-box-icon bg-warning"><i class="fas fa-shield-alt"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">角色</span>
-                                            <span class="info-box-number">系統管理員</span>
-                                        </div>
-                                    </div>
-                                    <div class="info-box">
-                                        <span class="info-box-icon bg-danger"><i class="fas fa-calendar"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">註冊日期</span>
-                                            <span class="info-box-number"><%= user ? new Date(user.createdAt).toLocaleDateString('zh-TW') : 'N/A' %></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">安全設定</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="form-group">
-                                        <label for="currentPassword">目前密碼</label>
-                                        <input type="password" class="form-control" id="currentPassword" placeholder="輸入目前密碼">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="newPassword">新密碼</label>
-                                        <input type="password" class="form-control" id="newPassword" placeholder="輸入新密碼">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="confirmPassword">確認新密碼</label>
-                                        <input type="password" class="form-control" id="confirmPassword" placeholder="再次輸入新密碼">
-                                    </div>
-                                    <button type="button" class="btn btn-warning btn-block">
-                                        <i class="fas fa-key"></i> 變更密碼
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -272,13 +254,39 @@
 
     <script>
         $(document).ready(function() {
-            // 顯示 flash 訊息
-            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
-                toastr.success('<%= success_msg %>');
-            <% } %>
-            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
-                toastr.error('<%= error_msg %>');
-            <% } %>
+            // 處理帳號狀態切換
+            $('#isActive').change(function() {
+                const isChecked = $(this).is(':checked');
+                const label = $(this).next('label');
+                
+                if (isChecked) {
+                    label.text('啟用');
+                    label.removeClass('text-danger').addClass('text-success');
+                } else {
+                    label.text('停用');
+                    label.removeClass('text-success').addClass('text-danger');
+                }
+            });
+            
+            // 初始化狀態標籤顏色
+            const isActive = $('#isActive').is(':checked');
+            const label = $('#isActive').next('label');
+            if (isActive) {
+                label.addClass('text-success');
+            } else {
+                label.addClass('text-danger');
+            }
+            
+            // 表單提交確認
+            $('form').submit(function(e) {
+                const isActive = $('#isActive').is(':checked');
+                if (!isActive) {
+                    if (!confirm('確定要停用此帳號嗎？停用後將無法登入系統！')) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+            });
         });
     </script>
 </body>

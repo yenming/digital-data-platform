@@ -79,9 +79,21 @@ class AdminController {
     try {
       const currentUser = req.session.user;
       
+      // 從資料庫獲取最新的用戶資料
+      const user = await User.findByPk(currentUser.id, {
+        attributes: ['id', 'username', 'email', 'firstName', 'lastName', 'role', 'isActive', 'emailVerified', 'lastLogin', 'createdAt', 'updatedAt']
+      });
+      
+      if (!user) {
+        req.flash('error_msg', '用戶不存在');
+        return res.redirect('/dashboard/admin');
+      }
+      
+      const errorMsg = req.flash('error_msg');
       res.render('dashboard/admin/profile', {
         title: '用戶資料設定',
-        user: currentUser
+        user: user,
+        error_msg: errorMsg && errorMsg.length > 0 ? errorMsg[0] : null
       });
     } catch (error) {
       console.error('獲取用戶資料設定頁面失敗:', error);
@@ -97,15 +109,28 @@ class AdminController {
    */
   static async updateProfile(req, res) {
     try {
-      const { username, email, firstName, lastName } = req.body;
+      const { username, email, firstName, lastName, isActive } = req.body;
       const currentUser = req.session.user;
 
-      await User.update({
+      // 檢查是否要停用自己的帳號
+      if (isActive === 'false' && currentUser.id === parseInt(req.params.userId || currentUser.id)) {
+        req.flash('error_msg', '您不能停用自己的帳號！');
+        return res.redirect('/dashboard/admin/profile');
+      }
+
+      const updateData = {
         username,
         email,
         firstName,
         lastName
-      }, {
+      };
+
+      // 只有管理員可以修改 isActive 狀態
+      if (isActive !== undefined) {
+        updateData.isActive = isActive === 'true' || isActive === 'on';
+      }
+
+      await User.update(updateData, {
         where: { id: currentUser.id }
       });
 
@@ -115,10 +140,11 @@ class AdminController {
         username,
         email,
         firstName,
-        lastName
+        lastName,
+        isActive: updateData.isActive !== undefined ? updateData.isActive : req.session.user.isActive
       };
 
-      req.flash('success_msg', '用戶資料更新成功！');
+      // 成功更新後直接重定向，不顯示成功訊息
       res.redirect('/dashboard/admin/profile');
     } catch (error) {
       console.error('更新用戶資料失敗:', error);
