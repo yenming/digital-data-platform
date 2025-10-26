@@ -1,3 +1,72 @@
-<nav class="navbar navbar-expand-lg navbar-light shadow-sm">
-    nav
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+        <!-- 品牌 Logo -->
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <i class="fas fa-chart-line text-primary me-2"></i>
+            <span class="fw-bold">全媒體數據儀表板</span>
+        </a>
+
+        <!-- 手機版選單按鈕 -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- 導航選單 -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">首頁</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/products">產品介紹</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="platformsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        支援平台
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="platformsDropdown">
+                        <li><a class="dropdown-item" href="#"><i class="fab fa-facebook text-primary me-2"></i>Meta Ads</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fab fa-google text-danger me-2"></i>Google Analytics 4</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fab fa-instagram text-warning me-2"></i>Instagram</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fab fa-google text-success me-2"></i>Search Console</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fab fa-google text-info me-2"></i>Google Ads</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fab fa-line text-success me-2"></i>Line LAP</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#features">功能特色</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact">聯絡我們</a>
+                </li>
+            </ul>
+
+            <!-- 右側選單 -->
+            <ul class="navbar-nav">
+                <% if (typeof user !== 'undefined' && user) { %>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-2"></i>
+                            <%= user.first_name || user.username %>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="/dashboard"><i class="fas fa-tachometer-alt me-2"></i>數據儀表板</a></li>
+                            <li><a class="dropdown-item" href="/dashboard/platforms"><i class="fas fa-plug me-2"></i>平台管理</a></li>
+                            <li><a class="dropdown-item" href="/dashboard/reports"><i class="fas fa-chart-bar me-2"></i>數據報表</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/users/profile"><i class="fas fa-user me-2"></i>個人資料</a></li>
+                            <li><a class="dropdown-item" href="/auth/logout"><i class="fas fa-sign-out-alt me-2"></i>登出</a></li>
+                        </ul>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/login">登入</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary ms-2" href="/auth/register">免費試用</a>
+                    </li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
 </nav>

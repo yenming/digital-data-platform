@@ -51,8 +51,8 @@ function initializeFormValidation() {
 
 // 載入動畫初始化
 function initializeLoadingAnimations() {
-    // 為按鈕添加載入狀態
-    const submitButtons = document.querySelectorAll('button[type="submit"]');
+    // 為按鈕添加載入狀態（但不在登入表單上使用，避免干擾）
+    const submitButtons = document.querySelectorAll('button[type="submit"]:not(#loginForm button)');
     
     submitButtons.forEach(button => {
         button.addEventListener('click', function() {

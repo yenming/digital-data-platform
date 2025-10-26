@@ -26,10 +26,16 @@ const verifyToken = (req, res, next) => {
 
 // 檢查使用者是否已登入（Session 版本）
 const requireAuth = (req, res, next) => {
+  console.log('=== requireAuth 中間件 ===');
+  console.log('Session:', req.session);
+  console.log('Session.user:', req.session?.user);
+  
   if (req.session && req.session.user) {
+    console.log('✅ 認證通過');
     return next();
   }
   
+  console.log('❌ 認證失敗，重定向到登入頁');
   req.flash('error_msg', '請先登入');
   res.redirect('/auth/login');
 };
@@ -90,7 +96,7 @@ const loadUser = async (req, res, next) => {
           firstName: user.firstName,
           lastName: user.lastName,
           role: user.role,
-          isAdmin: user.isAdmin()
+          isAdmin: user.role === 'admin'
         };
       } else {
         // 使用者不存在或已被停用，清除 session

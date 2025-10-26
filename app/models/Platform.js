@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../../config/database');
 
-const Platform = sequelize.define('Platform', {
+module.exports = (sequelize, DataTypes) => {
+  const Platform = sequelize.define('Platform', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -57,6 +57,7 @@ const Platform = sequelize.define('Platform', {
   tableName: 'platforms',
   timestamps: true,
   comment: '平台配置表'
-});
+  });
 
-module.exports = Platform;
+  return Platform;
+};

@@ -1321,6 +1321,204 @@ footer a:hover {
     }
 }
 
+/* Navbar 樣式 */
+.navbar {
+    transition: all 0.3s ease;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color) !important;
+    text-decoration: none;
+}
+
+.navbar-brand:hover {
+    color: var(--primary-dark) !important;
+}
+
+.navbar-nav .nav-link {
+    font-weight: 500;
+    color: var(--text-primary) !important;
+    padding: 0.75rem 1rem !important;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--primary-color) !important;
+}
+
+.navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: 80%;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--border-radius);
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--light-bg);
+    color: var(--primary-color);
+}
+
+.dropdown-item i {
+    width: 20px;
+    text-align: center;
+}
+
+/* Footer 樣式 */
+footer {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-brand h5 {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.footer-brand p {
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.social-links a:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+footer h6 {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+footer ul li {
+    margin-bottom: 0.5rem;
+}
+
+footer ul li a {
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+footer ul li a:hover {
+    color: var(--primary-light) !important;
+    padding-left: 5px;
+}
+
+.contact-info .fas {
+    width: 20px;
+    text-align: center;
+}
+
+.newsletter .form-control {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.newsletter .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.newsletter .form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.newsletter .btn {
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    border: 1px solid var(--primary-color);
+}
+
+.newsletter .btn:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+footer hr {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+footer .list-inline-item a {
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+footer .list-inline-item a:hover {
+    color: var(--primary-light) !important;
+}
+
+/* 響應式 Navbar 和 Footer */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 0.5rem 0 !important;
+    }
+    
+    footer .col-lg-4,
+    footer .col-lg-2 {
+        margin-bottom: 2rem;
+    }
+    
+    .newsletter .input-group {
+        flex-direction: column;
+    }
+    
+    .newsletter .form-control,
+    .newsletter .btn {
+        border-radius: var(--border-radius);
+        margin-bottom: 0.5rem;
+    }
+    
+    .newsletter .btn {
+        width: 100%;
+    }
+}
+
 /* 打印樣式 */
 @media print {
     .navbar,

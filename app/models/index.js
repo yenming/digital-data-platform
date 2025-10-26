@@ -1,43 +1,40 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const process = require('process');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
-const db = {};
+const { sequelize } = require('../config/database');
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+// 導入所有模型
+const User = require('./User')(sequelize, require('sequelize').DataTypes);
+const Platform = require('./Platform')(sequelize, require('sequelize').DataTypes);
+const PlatformConnection = require('./PlatformConnection')(sequelize, require('sequelize').DataTypes);
+const DataMetric = require('./DataMetric')(sequelize, require('sequelize').DataTypes);
+const Dashboard = require('./Dashboard')(sequelize, require('sequelize').DataTypes);
+const Widget = require('./Widget')(sequelize, require('sequelize').DataTypes);
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+// 定義關聯
+User.hasMany(PlatformConnection, { foreignKey: 'userId' });
+PlatformConnection.belongsTo(User, { foreignKey: 'userId' });
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
+Platform.hasMany(PlatformConnection, { foreignKey: 'platformId' });
+PlatformConnection.belongsTo(Platform, { foreignKey: 'platformId' });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+PlatformConnection.hasMany(DataMetric, { foreignKey: 'connectionId' });
+DataMetric.belongsTo(PlatformConnection, { foreignKey: 'connectionId' });
+
+User.hasMany(Dashboard, { foreignKey: 'userId' });
+Dashboard.belongsTo(User, { foreignKey: 'userId' });
+
+Dashboard.hasMany(Widget, { foreignKey: 'dashboardId' });
+Widget.belongsTo(Dashboard, { foreignKey: 'dashboardId' });
+
+const db = {
+  sequelize,
+  Sequelize: require('sequelize'),
+  User,
+  Platform,
+  PlatformConnection,
+  DataMetric,
+  Dashboard,
+  Widget
+};
 
 module.exports = db;

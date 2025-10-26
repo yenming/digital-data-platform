@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../../config/database');
 
-const DataMetric = sequelize.define('DataMetric', {
+module.exports = (sequelize, DataTypes) => {
+  const DataMetric = sequelize.define('DataMetric', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -77,6 +77,7 @@ const DataMetric = sequelize.define('DataMetric', {
       fields: ['metricName']
     }
   ]
-});
+  });
 
-module.exports = DataMetric;
+  return DataMetric;
+};

@@ -7,7 +7,7 @@ const sequelize = new Sequelize({
   port: process.env.DB_PORT || 3306,
   database: process.env.DB_NAME || 'orionstar_tw',
   username: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
+  password: process.env.DB_PASSWORD || 'orionstar_password',
   dialect: 'mysql',
   logging: process.env.NODE_ENV === 'development' ? console.log : false,
   pool: {

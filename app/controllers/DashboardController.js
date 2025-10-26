@@ -1,41 +1,27 @@
 const { Platform, PlatformConnection, Dashboard, Widget, DataMetric } = require('../models');
-const PlatformService = require('../services/PlatformService');
-const AnalyticsService = require('../services/AnalyticsService');
 const { validationResult } = require('express-validator');
 
 class DashboardController {
   // 儀表板首頁
-  async index(req, res) {
+  static async index(req, res) {
     try {
       const userId = req.session.user.id;
-      const { period = '30d', platform } = req.query;
       
-      // 獲取儀表板總覽
-      const overview = await AnalyticsService.getDashboardOverview(userId, { period });
-      
-      // 獲取KPI數據
-      const kpis = await AnalyticsService.getKPIs(userId, { period });
-      
-      // 獲取平台趨勢
-      const trends = await AnalyticsService.getCrossPlatformComparison(userId, { period });
-      
+      // 簡化版本 - 直接渲染儀表板頁面
       res.render('dashboard/index', {
         title: '數據儀表板',
-        overview,
-        kpis,
-        trends,
-        currentPeriod: period,
-        selectedPlatform: platform
+        user: req.session.user,
+        message: '歡迎使用全媒體數據儀表板！'
       });
     } catch (error) {
       console.error('儀表板首頁錯誤:', error);
       req.flash('error_msg', '載入儀表板失敗');
-      res.redirect('/users/dashboard');
+      res.redirect('/auth/login');
     }
   }
 
   // 平台管理頁面
-  async platforms(req, res) {
+  static async platforms(req, res) {
     try {
       const userId = req.session.user.id;
       
@@ -65,7 +51,7 @@ class DashboardController {
   }
 
   // 連接新平台
-  async connectPlatform(req, res) {
+  static async connectPlatform(req, res) {
     try {
       const userId = req.session.user.id;
       const { platformId, accountId, accountName, accessToken, refreshToken, config } = req.body;
@@ -109,7 +95,7 @@ class DashboardController {
   }
 
   // 斷開平台連接
-  async disconnectPlatform(req, res) {
+  static async disconnectPlatform(req, res) {
     try {
       const userId = req.session.user.id;
       const { connectionId } = req.params;
@@ -141,7 +127,7 @@ class DashboardController {
   }
 
   // 同步平台數據
-  async syncPlatform(req, res) {
+  static async syncPlatform(req, res) {
     try {
       const userId = req.session.user.id;
       const { connectionId } = req.params;
@@ -175,7 +161,7 @@ class DashboardController {
   }
 
   // 數據報表頁面
-  async reports(req, res) {
+  static async reports(req, res) {
     try {
       const userId = req.session.user.id;
       const { 
@@ -216,7 +202,7 @@ class DashboardController {
   }
 
   // 導出數據
-  async exportData(req, res) {
+  static async exportData(req, res) {
     try {
       const userId = req.session.user.id;
       const { format, startDate, endDate, platforms, metrics } = req.query;
@@ -247,7 +233,7 @@ class DashboardController {
   }
 
   // 自定義儀表板
-  async customDashboard(req, res) {
+  static async customDashboard(req, res) {
     try {
       const userId = req.session.user.id;
       const { dashboardId } = req.params;
@@ -291,7 +277,7 @@ class DashboardController {
   }
 
   // 創建自定義儀表板
-  async createDashboard(req, res) {
+  static async createDashboard(req, res) {
     try {
       const userId = req.session.user.id;
       const { name, description, layout, filters } = req.body;
@@ -314,7 +300,7 @@ class DashboardController {
   }
 
   // API: 獲取實時數據
-  async getRealtimeData(req, res) {
+  static async getRealtimeData(req, res) {
     try {
       const userId = req.session.user.id;
       const { platformId, metricName, hours = 24 } = req.query;
@@ -383,4 +369,4 @@ class DashboardController {
   }
 }
 
-module.exports = new DashboardController();
+module.exports = DashboardController;

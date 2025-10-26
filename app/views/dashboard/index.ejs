@@ -1,512 +1,215 @@
-<%- include('../layouts/main', { 
-    title: '數據儀表板',
-    page: 'dashboard',
-    body: `
-<div class="container-fluid">
-    <!-- 頁面標題 -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h1 class="h3 mb-1">數據儀表板</h1>
-                    <p class="text-muted mb-0">一站式多平台數據分析中心</p>
-                </div>
-                <div class="d-flex gap-2">
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-outline-primary btn-sm" data-period="7d">7天</button>
-                        <button type="button" class="btn btn-outline-primary btn-sm" data-period="30d">30天</button>
-                        <button type="button" class="btn btn-outline-primary btn-sm" data-period="90d">90天</button>
-                    </div>
-                    <button class="btn btn-primary btn-sm" onclick="syncAllData()">
-                        <i class="fas fa-sync-alt me-1"></i>同步數據
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- KPI 卡片 -->
-    <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                            <div class="bg-primary bg-opacity-10 rounded-circle p-3">
-                                <i class="fas fa-eye text-primary"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h6 class="text-muted mb-1">總曝光數</h6>
-                            <h4 class="mb-0" id="totalImpressions">-</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                            <div class="bg-success bg-opacity-10 rounded-circle p-3">
-                                <i class="fas fa-mouse-pointer text-success"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h6 class="text-muted mb-1">總點擊數</h6>
-                            <h4 class="mb-0" id="totalClicks">-</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                            <div class="bg-warning bg-opacity-10 rounded-circle p-3">
-                                <i class="fas fa-dollar-sign text-warning"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h6 class="text-muted mb-1">總花費</h6>
-                            <h4 class="mb-0" id="totalSpend">-</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                            <div class="bg-info bg-opacity-10 rounded-circle p-3">
-                                <i class="fas fa-percentage text-info"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h6 class="text-muted mb-1">平均CTR</h6>
-                            <h4 class="mb-0" id="averageCTR">-</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 平台狀態 -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-0">
-                    <h5 class="mb-0">平台連接狀態</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row" id="platformStatus">
-                        <!-- 平台狀態將由 JavaScript 動態載入 -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 圖表區域 -->
-    <div class="row mb-4">
-        <div class="col-lg-8 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-0">
-                    <h5 class="mb-0">數據趨勢</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="trendChart" height="300"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-0">
-                    <h5 class="mb-0">平台分布</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="platformChart" height="300"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 數據表格 -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-0">
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>數據儀表板 - Digital Data Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- 導航欄 -->
+    <%- include('../partials/navbar', { user: typeof user !== 'undefined' ? user : null, page: 'dashboard' }) %>
+    
+    <!-- 主要內容 -->
+    <main role="main">
+        <div class="container-fluid py-4">
+            <!-- 頁面標題 -->
+            <div class="row mb-4">
+                <div class="col-12">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">最新數據</h5>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-outline-primary btn-sm" onclick="exportData('csv')">
-                                <i class="fas fa-download me-1"></i>導出CSV
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="exportData('json')">
-                                <i class="fas fa-download me-1"></i>導出JSON
-                            </button>
+                        <div>
+                            <h1 class="h3 mb-0">
+                                <i class="fas fa-chart-line me-2 text-primary"></i>
+                                數據儀表板
+                            </h1>
+                            <p class="text-muted mb-0">歡迎使用全媒體數據儀表板</p>
+                        </div>
+                        <div>
+                            <span class="badge bg-success">
+                                <i class="fas fa-user me-1"></i>
+                                <%= user ? user.username : 'Guest' %>
+                            </span>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover" id="dataTable">
-                            <thead>
-                                <tr>
-                                    <th>平台</th>
-                                    <th>指標</th>
-                                    <th>數值</th>
-                                    <th>日期</th>
-                                    <th>類型</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- 數據將由 JavaScript 動態載入 -->
-                            </tbody>
-                        </table>
+            </div>
+
+            <!-- 歡迎訊息 -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>登入成功！</strong> <%= message || '歡迎使用全媒體數據儀表板！' %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 快速統計 -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="card-title">支援平台</h6>
+                                    <h3 class="mb-0">7</h3>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-plug fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="card-title">數據指標</h6>
+                                    <h3 class="mb-0">50+</h3>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-chart-bar fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="card-title">即時同步</h6>
+                                    <h3 class="mb-0">24/7</h3>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-sync fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="card-title">系統穩定性</h6>
+                                    <h3 class="mb-0">99.9%</h3>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-shield-alt fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 功能區域 -->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-cogs me-2"></i>
+                                平台管理
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">連接和管理您的數據平台，包括 Meta Ads、Google Analytics、Instagram 等。</p>
+                            <a href="/dashboard/platforms" class="btn btn-primary">
+                                <i class="fas fa-external-link-alt me-1"></i>
+                                管理平台
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-chart-pie me-2"></i>
+                                數據報表
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">查看詳細的數據分析報告，了解您的營銷效果和用戶行為。</p>
+                            <a href="/dashboard/reports" class="btn btn-success">
+                                <i class="fas fa-external-link-alt me-1"></i>
+                                查看報表
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 支援平台 -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-plug me-2"></i>
+                                支援平台
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
+                                    <div class="platform-item">
+                                        <i class="fab fa-facebook fa-3x text-primary mb-2"></i>
+                                        <h6>Meta Ads</h6>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
+                                    <div class="platform-item">
+                                        <i class="fab fa-google fa-3x text-danger mb-2"></i>
+                                        <h6>Google Analytics</h6>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
+                                    <div class="platform-item">
+                                        <i class="fab fa-instagram fa-3x text-warning mb-2"></i>
+                                        <h6>Instagram</h6>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
+                                    <div class="platform-item">
+                                        <i class="fab fa-google fa-3x text-success mb-2"></i>
+                                        <h6>Search Console</h6>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
+                                    <div class="platform-item">
+                                        <i class="fab fa-google fa-3x text-info mb-2"></i>
+                                        <h6>Google Ads</h6>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
+                                    <div class="platform-item">
+                                        <i class="fab fa-line fa-3x text-success mb-2"></i>
+                                        <h6>Line LAP</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </main>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-let trendChart, platformChart;
-let currentPeriod = '<%= currentPeriod || "30d" %>';
-
-// 頁面載入時初始化
-document.addEventListener('DOMContentLoaded', function() {
-    initializeDashboard();
-    setupEventListeners();
-});
-
-// 初始化儀表板
-async function initializeDashboard() {
-    try {
-        await loadKPIData();
-        await loadPlatformStatus();
-        await loadChartData();
-        await loadTableData();
-    } catch (error) {
-        console.error('初始化儀表板失敗:', error);
-        showAlert('載入數據失敗，請重新整理頁面', 'danger');
-    }
-}
-
-// 載入KPI數據
-async function loadKPIData() {
-    try {
-        const response = await fetch('/dashboard/api/realtime');
-        const data = await response.json();
-        
-        if (data.success) {
-            updateKPIDisplay(data.data);
-        }
-    } catch (error) {
-        console.error('載入KPI數據失敗:', error);
-    }
-}
-
-// 更新KPI顯示
-function updateKPIDisplay(data) {
-    const kpis = calculateKPIs(data);
+    <!-- 頁腳 -->
+    <%- include('../partials/footer') %>
     
-    document.getElementById('totalImpressions').textContent = formatNumber(kpis.totalImpressions);
-    document.getElementById('totalClicks').textContent = formatNumber(kpis.totalClicks);
-    document.getElementById('totalSpend').textContent = formatCurrency(kpis.totalSpend);
-    document.getElementById('averageCTR').textContent = formatPercentage(kpis.averageCTR);
-}
-
-// 計算KPI
-function calculateKPIs(data) {
-    let totalImpressions = 0;
-    let totalClicks = 0;
-    let totalSpend = 0;
-    
-    data.forEach(platform => {
-        platform.data.forEach(point => {
-            if (platform.metric === 'impressions') totalImpressions += point.value;
-            if (platform.metric === 'clicks') totalClicks += point.value;
-            if (platform.metric === 'spend') totalSpend += point.value;
-        });
-    });
-    
-    const averageCTR = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0;
-    
-    return { totalImpressions, totalClicks, totalSpend, averageCTR };
-}
-
-// 載入平台狀態
-async function loadPlatformStatus() {
-    try {
-        const response = await fetch('/dashboard/api/platforms');
-        const data = await response.json();
-        
-        if (data.success) {
-            displayPlatformStatus(data.platforms);
-        }
-    } catch (error) {
-        console.error('載入平台狀態失敗:', error);
-    }
-}
-
-// 顯示平台狀態
-function displayPlatformStatus(platforms) {
-    const container = document.getElementById('platformStatus');
-    container.innerHTML = '';
-    
-    platforms.forEach(platform => {
-        const statusClass = platform.status === 'success' ? 'success' : 'danger';
-        const statusText = platform.status === 'success' ? '正常' : '異常';
-        
-        const platformCard = document.createElement('div');
-        platformCard.className = 'col-lg-2 col-md-4 col-6 mb-3';
-        platformCard.innerHTML = `
-            <div class="text-center">
-                <div class="mb-2">
-                    <i class="${platform.icon} fa-2x" style="color: ${platform.color}"></i>
-                </div>
-                <h6 class="mb-1">${platform.name}</h6>
-                <span class="badge bg-${statusClass}">${statusText}</span>
-                <div class="small text-muted mt-1">
-                    ${platform.metricsCount} 筆數據
-                </div>
-            </div>
-        `;
-        container.appendChild(platformCard);
-    });
-}
-
-// 載入圖表數據
-async function loadChartData() {
-    try {
-        const response = await fetch(`/dashboard/api/trends?period=${currentPeriod}`);
-        const data = await response.json();
-        
-        if (data.success) {
-            createTrendChart(data.trends);
-            createPlatformChart(data.platforms);
-        }
-    } catch (error) {
-        console.error('載入圖表數據失敗:', error);
-    }
-}
-
-// 創建趨勢圖表
-function createTrendChart(trends) {
-    const ctx = document.getElementById('trendChart').getContext('2d');
-    
-    if (trendChart) {
-        trendChart.destroy();
-    }
-    
-    const datasets = trends.map(trend => ({
-        label: trend.platform,
-        data: trend.data.map(point => point.value),
-        borderColor: trend.color,
-        backgroundColor: trend.color + '20',
-        tension: 0.4
-    }));
-    
-    trendChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: trends[0]?.data.map(point => point.date) || [],
-            datasets: datasets
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-}
-
-// 創建平台分布圖表
-function createPlatformChart(platforms) {
-    const ctx = document.getElementById('platformChart').getContext('2d');
-    
-    if (platformChart) {
-        platformChart.destroy();
-    }
-    
-    platformChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: platforms.map(p => p.name),
-            datasets: [{
-                data: platforms.map(p => p.value),
-                backgroundColor: platforms.map(p => p.color),
-                borderWidth: 2,
-                borderColor: '#fff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }
-    });
-}
-
-// 載入表格數據
-async function loadTableData() {
-    try {
-        const response = await fetch('/dashboard/api/table');
-        const data = await response.json();
-        
-        if (data.success) {
-            displayTableData(data.data);
-        }
-    } catch (error) {
-        console.error('載入表格數據失敗:', error);
-    }
-}
-
-// 顯示表格數據
-function displayTableData(data) {
-    const tbody = document.querySelector('#dataTable tbody');
-    tbody.innerHTML = '';
-    
-    data.forEach(item => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${item.platform}</td>
-            <td>${item.metric}</td>
-            <td>${formatValue(item.value, item.type)}</td>
-            <td>${item.date}</td>
-            <td><span class="badge bg-secondary">${item.type}</span></td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-// 設置事件監聽器
-function setupEventListeners() {
-    // 期間選擇按鈕
-    document.querySelectorAll('[data-period]').forEach(btn => {
-        btn.addEventListener('click', function() {
-            currentPeriod = this.dataset.period;
-            updatePeriodButtons();
-            loadChartData();
-        });
-    });
-}
-
-// 更新期間按鈕狀態
-function updatePeriodButtons() {
-    document.querySelectorAll('[data-period]').forEach(btn => {
-        btn.classList.remove('btn-primary');
-        btn.classList.add('btn-outline-primary');
-        
-        if (btn.dataset.period === currentPeriod) {
-            btn.classList.remove('btn-outline-primary');
-            btn.classList.add('btn-primary');
-        }
-    });
-}
-
-// 同步所有數據
-async function syncAllData() {
-    try {
-        showAlert('正在同步數據...', 'info');
-        
-        const response = await fetch('/dashboard/sync/all', {
-            method: 'POST'
-        });
-        const data = await response.json();
-        
-        if (data.success) {
-            showAlert('數據同步成功', 'success');
-            initializeDashboard();
-        } else {
-            showAlert('數據同步失敗: ' + data.message, 'danger');
-        }
-    } catch (error) {
-        console.error('同步數據失敗:', error);
-        showAlert('同步數據失敗', 'danger');
-    }
-}
-
-// 導出數據
-function exportData(format) {
-    const params = new URLSearchParams({
-        format: format,
-        period: currentPeriod
-    });
-    
-    window.open(`/dashboard/export?${params}`, '_blank');
-}
-
-// 格式化數字
-function formatNumber(num) {
-    return new Intl.NumberFormat().format(num);
-}
-
-// 格式化貨幣
-function formatCurrency(num) {
-    return new Intl.NumberFormat('zh-TW', {
-        style: 'currency',
-        currency: 'TWD'
-    }).format(num);
-}
-
-// 格式化百分比
-function formatPercentage(num) {
-    return num.toFixed(2) + '%';
-}
-
-// 格式化數值
-function formatValue(value, type) {
-    switch (type) {
-        case 'currency':
-            return formatCurrency(value);
-        case 'percentage':
-            return formatPercentage(value);
-        default:
-            return formatNumber(value);
-    }
-}
-
-// 顯示提示訊息
-function showAlert(message, type) {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-    alertDiv.style.top = '20px';
-    alertDiv.style.right = '20px';
-    alertDiv.style.zIndex = '9999';
-    alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    
-    document.body.appendChild(alertDiv);
-    
-    setTimeout(() => {
-        alertDiv.remove();
-    }, 5000);
-}
-</script>
-`
-}) %>
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

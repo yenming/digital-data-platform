@@ -1,99 +1,171 @@
-<%- include('../layouts/main', { 
-    title: '登入',
-    page: 'auth',
-    body: `
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white text-center">
-                    <h4 class="mb-0">
-                        <i class="fas fa-sign-in-alt me-2"></i>
-                        登入帳號
-                    </h4>
-                </div>
-                <div class="card-body p-4">
-                    <form action="/auth/login" method="POST">
-                        <!-- 電子郵件 -->
-                        <div class="mb-3">
-                            <label for="email" class="form-label">
-                                <i class="fas fa-envelope me-1"></i>
-                                電子郵件
-                            </label>
-                            <input 
-                                type="email" 
-                                class="form-control <%= typeof errors !== 'undefined' && errors.some(e => e.path === 'email') ? 'is-invalid' : '' %>" 
-                                id="email" 
-                                name="email" 
-                                value="<%= typeof oldInput !== 'undefined' && oldInput.email ? oldInput.email : '' %>"
-                                required
-                            >
-                            <% if (typeof errors !== 'undefined') { %>
-                                <% const emailError = errors.find(e => e.path === 'email'); %>
-                                <% if (emailError) { %>
-                                    <div class="invalid-feedback">
-                                        <%= emailError.msg %>
-                                    </div>
-                                <% } %>
-                            <% } %>
-                        </div>
-                        
-                        <!-- 密碼 -->
-                        <div class="mb-3">
-                            <label for="password" class="form-label">
-                                <i class="fas fa-lock me-1"></i>
-                                密碼
-                            </label>
-                            <input 
-                                type="password" 
-                                class="form-control <%= typeof errors !== 'undefined' && errors.some(e => e.path === 'password') ? 'is-invalid' : '' %>" 
-                                id="password" 
-                                name="password" 
-                                required
-                            >
-                            <% if (typeof errors !== 'undefined') { %>
-                                <% const passwordError = errors.find(e => e.path === 'password'); %>
-                                <% if (passwordError) { %>
-                                    <div class="invalid-feedback">
-                                        <%= passwordError.msg %>
-                                    </div>
-                                <% } %>
-                            <% } %>
-                        </div>
-                        
-                        <!-- 記住我 -->
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                            <label class="form-check-label" for="remember">
-                                記住我
-                            </label>
-                        </div>
-                        
-                        <!-- 提交按鈕 -->
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入 - Digital Data Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- 導航欄 -->
+    <%- include('../partials/navbar', { user: typeof user !== 'undefined' ? user : null, page: 'auth' }) %>
+    
+    <!-- 主要內容 -->
+    <main role="main">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h4 class="mb-0">
                                 <i class="fas fa-sign-in-alt me-2"></i>
-                                登入
-                            </button>
+                                登入帳號
+                            </h4>
                         </div>
-                    </form>
-                </div>
-                <div class="card-footer text-center">
-                    <p class="mb-2">
-                        還沒有帳號？
-                        <a href="/auth/register" class="text-decoration-none">
-                            立即註冊
-                        </a>
-                    </p>
-                    <p class="mb-0">
-                        <a href="/auth/forgot-password" class="text-decoration-none">
-                            忘記密碼？
-                        </a>
-                    </p>
+                        <div class="card-body p-4">
+                            <!-- Flash 訊息 -->
+                            <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <%= error_msg %>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            <% } %>
+                            
+                            <% if (typeof success_msg !== 'undefined' && success_msg.length > 0) { %>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    <%= success_msg %>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            <% } %>
+                            
+                            <form action="/auth/login" method="POST" id="loginForm">
+                                <!-- 電子郵件 -->
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">
+                                        <i class="fas fa-envelope me-1"></i>
+                                        電子郵件
+                                    </label>
+                                    <input 
+                                        type="email" 
+                                        class="form-control <%= typeof errors !== 'undefined' && errors.some(e => e.path === 'email') ? 'is-invalid' : '' %>" 
+                                        id="email" 
+                                        name="email" 
+                                        value="<%= typeof oldInput !== 'undefined' && oldInput.email ? oldInput.email : '' %>"
+                                        required
+                                    >
+                                    <% if (typeof errors !== 'undefined') { %>
+                                        <% const emailError = errors.find(e => e.path === 'email'); %>
+                                        <% if (emailError) { %>
+                                            <div class="invalid-feedback">
+                                                <%= emailError.msg %>
+                                            </div>
+                                        <% } %>
+                                    <% } %>
+                                </div>
+                                
+                                <!-- 密碼 -->
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">
+                                        <i class="fas fa-lock me-1"></i>
+                                        密碼
+                                    </label>
+                                    <input 
+                                        type="password" 
+                                        class="form-control <%= typeof errors !== 'undefined' && errors.some(e => e.path === 'password') ? 'is-invalid' : '' %>" 
+                                        id="password" 
+                                        name="password" 
+                                        required
+                                    >
+                                    <% if (typeof errors !== 'undefined') { %>
+                                        <% const passwordError = errors.find(e => e.path === 'password'); %>
+                                        <% if (passwordError) { %>
+                                            <div class="invalid-feedback">
+                                                <%= passwordError.msg %>
+                                            </div>
+                                        <% } %>
+                                    <% } %>
+                                </div>
+                                
+                                <!-- 記住我 -->
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                                    <label class="form-check-label" for="remember">
+                                        記住我
+                                    </label>
+                                </div>
+                                
+                                <!-- 提交按鈕 -->
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-sign-in-alt me-2"></i>
+                                        登入
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer text-center">
+                            <p class="mb-2">
+                                還沒有帳號？
+                                <a href="/auth/register" class="text-decoration-none">
+                                    立即註冊
+                                </a>
+                            </p>
+                            <p class="mb-0">
+                                <a href="/auth/forgot-password" class="text-decoration-none">
+                                    忘記密碼？
+                                </a>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-`
-}) %>
+    </main>
+    
+    <!-- 頁腳 -->
+    <%- include('../partials/footer') %>
+    
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        // 登入表單調試
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                console.log('登入表單找到');
+                
+                loginForm.addEventListener('submit', function(e) {
+                    console.log('表單提交事件觸發');
+                    
+                    // 檢查表單驗證
+                    if (!this.checkValidity()) {
+                        console.log('表單驗證失敗');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                    
+                    console.log('表單驗證通過，準備提交');
+                    
+                    // 顯示載入狀態但不阻止提交
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>登入中...';
+                        submitBtn.disabled = true;
+                    }
+                    
+                    // 不阻止表單提交，讓它正常進行
+                    console.log('允許表單提交');
+                });
+            } else {
+                console.error('登入表單未找到');
+            }
+        });
+    </script>
+</body>
+</html>

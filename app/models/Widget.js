@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../../config/database');
 
-const Widget = sequelize.define('Widget', {
+module.exports = (sequelize, DataTypes) => {
+  const Widget = sequelize.define('Widget', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -66,6 +66,7 @@ const Widget = sequelize.define('Widget', {
   tableName: 'widgets',
   timestamps: true,
   comment: '小工具配置表'
-});
+  });
 
-module.exports = Widget;
+  return Widget;
+};

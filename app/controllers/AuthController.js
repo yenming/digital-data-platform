@@ -11,7 +11,9 @@ class AuthController {
       }
       
       res.render('auth/login', {
-        title: '登入'
+        title: '登入',
+        error_msg: req.flash('error_msg'),
+        success_msg: req.flash('success_msg')
       });
     } catch (error) {
       console.error('登入頁面錯誤:', error);
@@ -25,24 +27,32 @@ class AuthController {
   // 處理登入
   static async login(req, res) {
     try {
+      console.log('登入請求收到:', req.body);
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
+        console.log('驗證錯誤:', errors.array());
         return res.render('auth/login', {
           title: '登入',
           errors: errors.array(),
-          oldInput: req.body
+          oldInput: req.body,
+          error_msg: req.flash('error_msg'),
+          success_msg: req.flash('success_msg')
         });
       }
 
       const { email, password, remember } = req.body;
       
       // 查找使用者
-      const user = await User.findByEmail(email);
+      console.log('查找用戶:', email);
+      const user = await User.findOne({ where: { email: email } });
+      console.log('找到用戶:', user ? user.username : '未找到');
       if (!user) {
         req.flash('error_msg', '電子郵件或密碼錯誤');
         return res.render('auth/login', {
           title: '登入',
-          oldInput: req.body
+          oldInput: req.body,
+          error_msg: req.flash('error_msg'),
+          success_msg: req.flash('success_msg')
         });
       }
 
@@ -51,17 +61,22 @@ class AuthController {
         req.flash('error_msg', '您的帳號已被停用，請聯絡管理員');
         return res.render('auth/login', {
           title: '登入',
-          oldInput: req.body
+          oldInput: req.body,
+          error_msg: req.flash('error_msg'),
+          success_msg: req.flash('success_msg')
         });
       }
 
       // 驗證密碼
-      const isValidPassword = await user.validatePassword(password);
+      const bcrypt = require('bcryptjs');
+      const isValidPassword = await bcrypt.compare(password, user.password);
       if (!isValidPassword) {
         req.flash('error_msg', '電子郵件或密碼錯誤');
         return res.render('auth/login', {
           title: '登入',
-          oldInput: req.body
+          oldInput: req.body,
+          error_msg: req.flash('error_msg'),
+          success_msg: req.flash('success_msg')
         });
       }
 
@@ -100,8 +115,23 @@ class AuthController {
         });
       }
 
-      req.flash('success_msg', '登入成功！');
-      res.redirect('/dashboard');
+      // 保存 session 後再重定向
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session 保存錯誤:', err);
+          req.flash('error_msg', '登入時發生錯誤，請稍後再試');
+          return res.render('auth/login', {
+            title: '登入',
+            oldInput: req.body,
+            error_msg: req.flash('error_msg'),
+            success_msg: req.flash('success_msg')
+          });
+        }
+        
+        console.log('Session 已保存，重定向到 dashboard');
+        req.flash('success_msg', '登入成功！');
+        res.redirect('/dashboard');
+      });
     } catch (error) {
       console.error('登入錯誤:', error);
       req.flash('error_msg', '登入時發生錯誤，請稍後再試');
@@ -120,7 +150,9 @@ class AuthController {
       }
       
       res.render('auth/register', {
-        title: '註冊'
+        title: '註冊',
+        error_msg: req.flash('error_msg'),
+        success_msg: req.flash('success_msg')
       });
     } catch (error) {
       console.error('註冊頁面錯誤:', error);
@@ -139,7 +171,9 @@ class AuthController {
         return res.render('auth/register', {
           title: '註冊',
           errors: errors.array(),
-          oldInput: req.body
+          oldInput: req.body,
+          error_msg: req.flash('error_msg'),
+          success_msg: req.flash('success_msg')
         });
       }
 
@@ -150,7 +184,9 @@ class AuthController {
         req.flash('error_msg', '密碼確認不一致');
         return res.render('auth/register', {
           title: '註冊',
-          oldInput: req.body
+          oldInput: req.body,
+          error_msg: req.flash('error_msg'),
+          success_msg: req.flash('success_msg')
         });
       }
 
@@ -172,7 +208,9 @@ class AuthController {
         }
         return res.render('auth/register', {
           title: '註冊',
-          oldInput: req.body
+          oldInput: req.body,
+          error_msg: req.flash('error_msg'),
+          success_msg: req.flash('success_msg')
         });
       }
 

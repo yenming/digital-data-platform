@@ -11,7 +11,7 @@ const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 // 引入自定義模組
-const { sequelize, testConnection, syncDatabase, closeConnection } = require('./config/database');
+const { sequelize, testConnection, syncDatabase, closeConnection } = require('./app/config/database');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const homeRoutes = require('./routes/home');
@@ -64,7 +64,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: false, // 在開發環境中設為 false
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000 // 24 小時
   }
